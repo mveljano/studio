@@ -1,0 +1,325 @@
+"use client";
+
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { departments } from "@/lib/data";
+import { addEmployeeAction } from "../actions";
+
+const formSchema = z.object({
+  employeeId: z.string().min(1, "Employee ID is required"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  gender: z.enum(["Male", "Female", "Other"]),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
+  socialSecurityNumber: z.string().min(1, "Social security number is required"),
+  residence: z.string().min(1, "Residence is required"),
+  municipality: z.string().min(1, "Municipality is required"),
+  profession: z.string().min(1, "Profession is required"),
+  department: z.string().min(1, "Department is required"),
+  position: z.string().min(1, "Position is required"),
+  employmentDate: z.string().min(1, "Employment date is required"),
+  status: z.enum(["Active", "On Leave", "Terminated"]).default("Active"),
+});
+
+type AddEmployeeDialogProps = {
+  children: React.ReactNode;
+};
+
+export function AddEmployeeDialog({ children }: AddEmployeeDialogProps) {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+        employeeId: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        gender: "Male",
+        dateOfBirth: "",
+        socialSecurityNumber: "",
+        residence: "",
+        municipality: "",
+        profession: "",
+        department: "",
+        position: "",
+        employmentDate: "",
+        status: "Active",
+    },
+  });
+
+  const selectedDepartment = form.watch("department");
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    
+    const result = await addEmployeeAction(values);
+
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: "New employee has been added.",
+      });
+      form.reset();
+      setOpen(false);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: result.error || "Could not add the employee.",
+      });
+    }
+    setLoading(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[625px]">
+        <DialogHeader>
+          <DialogTitle>Add New Employee</DialogTitle>
+          <DialogDescription>
+            Enter the details for the new employee.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1">
+          <div className="grid grid-cols-2 gap-4">
+          <FormField
+                control={form.control}
+                name="employeeId"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Employee ID</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl><Input type="email" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="Male">Male</SelectItem>
+                            <SelectItem value="Female">Female</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl><Input type="date" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="socialSecurityNumber"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Social Security Number</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="residence"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Residence</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="municipality"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Municipality</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="profession"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Profession</FormLabel>
+                    <FormControl><Input {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="department"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Department</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select a department" /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            {departments.map(d => <SelectItem key={d.name} value={d.name}>{d.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="position"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Position</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!selectedDepartment}>
+                        <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select a position" /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            {departments.find(d => d.name === selectedDepartment)?.positions.map(p => <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+             <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            <SelectItem value="Active">Active</SelectItem>
+                            <SelectItem value="On Leave">On Leave</SelectItem>
+                             <SelectItem value="Terminated">Terminated</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="employmentDate"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Employment Date</FormLabel>
+                    <FormControl><Input type="date" {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+          </div>
+            <DialogFooter className="pt-4">
+                <DialogClose asChild>
+                    <Button type="button" variant="ghost">Cancel</Button>
+                </DialogClose>
+                <Button type="submit" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Add Employee
+                </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

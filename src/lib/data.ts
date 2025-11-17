@@ -239,8 +239,7 @@ export let departments: Department[] = [
                 name: 'Logistics Coordinator', 
                 medicalExamFrequency: 5, 
                 fireProtectionExamFrequency: 3, 
-                description: 'Coordinates logistics.', 
-                risksAndMeasures: [], 
+                description: 'Coordinates logistics.', _risksAndMeasures: [], 
                 riskLevel: 'Low', 
                 specialConditions: '',
                 subPositions: [
@@ -344,6 +343,20 @@ export function getPpeStock() {
 
 
 // --- MUTATIONS ---
+export function addEmployee(employeeData: Omit<Employee, 'id' | 'certifications' | 'terminationDate'>) {
+    if (employees.some(e => e.employeeId === employeeData.employeeId)) {
+        return { success: false, error: 'Employee ID must be unique.' };
+    }
+    const newEmployee: Employee = {
+        ...employeeData,
+        id: `emp-${Date.now()}`,
+        certifications: [],
+    };
+    employees = [newEmployee, ...employees];
+    return { success: true, employee: newEmployee };
+}
+
+
 export function updateEmployee(updatedEmployee: Employee) {
     const index = employees.findIndex(e => e.id === updatedEmployee.id);
     if (index === -1) { return { success: false, error: "Employee not found." }; }
