@@ -1,4 +1,5 @@
 
+
 export type Employee = {
   id: string;
   employeeId: string;
@@ -48,7 +49,25 @@ export type PPECheckout = {
   notes?: string;
 };
 
+export type RiskAndMeasure = {
+    id: string;
+    risk: string;
+    measure: string;
+};
+
+export type Position = {
+    id: string;
+    name: string;
+    medicalExamFrequency: number;
+    fireProtectionExamFrequency: number;
+    description: string;
+    risksAndMeasures: RiskAndMeasure[];
+    riskLevel: 'Low' | 'Medium' | 'High';
+    specialConditions: string;
+    subPositions?: Position[];
+};
+
 export type Department = {
     name: string;
-    positions: string[];
+    positions: Position[];
 };
