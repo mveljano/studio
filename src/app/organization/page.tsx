@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { departments as initialDepartments } from "@/lib/data";
-import { Briefcase, PlusCircle, ChevronsRight, Shield, Stethoscope, FileText, AlertTriangle, Cogs, ListChecks, Search, Wrench, Screwdriver, FlaskConical, Truck, Package, UserCheck } from "lucide-react";
+import { Briefcase, PlusCircle, Shield, Stethoscope, FileText, AlertTriangle, Cog, ListChecks, Search, Wrench, FlaskConical, Truck, Package, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ManageDepartmentDialog } from "./components/manage-department-dialog";
 import { ManagePositionDialog } from "./components/manage-position-dialog";
@@ -29,12 +29,12 @@ const EHSLogo = (props: SVGProps<SVGSVGElement>) => (
   
 
 const departmentIcons: Record<string, React.ReactNode> = {
-    'Production': <Cogs className="h-5 w-5 text-primary" />,
-    'Quality Assurance': <ListChecks className="h-5 w-5 text-primary" />,
+    'Production': <Cog className="h-5 w-5 text-primary" />,
+    'Quality Assurance': <><ListChecks className="h-5 w-5 text-primary" /><Search className="h-5 w-5 text-primary" /></>,
     'Maintenance': <Wrench className="h-5 w-5 text-primary" />,
     'EHS': <EHSLogo className="h-5 w-5 text-primary" />,
     'Engineering': <FlaskConical className="h-5 w-5 text-primary" />,
-    'Supply Chain': <Truck className="h-5 w-5 text-primary" />,
+    'Supply Chain': <><Truck className="h-5 w-5 text-primary" /><Package className="h-5 w-5 text-primary" /></>,
     'Human Resources': <UserCheck className="h-5 w-5 text-primary" />
 }
 
@@ -162,7 +162,9 @@ export default function OrganizationPage() {
                 <div className="flex items-center w-full group/trigger">
                     <AccordionTrigger className="flex-1">
                         <div className="flex items-center gap-3">
-                            {departmentIcons[department.name] || <Briefcase className="h-5 w-5 text-primary" />}
+                            <div className="flex items-center gap-1">
+                                {departmentIcons[department.name] || <Briefcase className="h-5 w-5 text-primary" />}
+                            </div>
                             <span className="font-semibold text-lg">{department.name}</span>
                         </div>
                     </AccordionTrigger>
@@ -187,3 +189,5 @@ export default function OrganizationPage() {
     </Card>
   );
 }
+
+    
