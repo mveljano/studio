@@ -33,7 +33,6 @@ import {
   Contact,
   Calendar,
   CalendarX,
-  Printer,
 } from "lucide-react";
 import { TrainingModule } from "@/lib/types";
 import { differenceInDays, parseISO } from "date-fns";
@@ -171,14 +170,6 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
                         </div>
                       </TableCell>
                       <TableCell className="text-right space-x-2">
-                        {training.status === 'Completed' && (
-                           <Button asChild variant="outline" size="sm">
-                             <Link href={`/documents/training-record/${employee.id}/${training.id}`} target="_blank">
-                               <Printer className="mr-2 h-4 w-4" />
-                               Print Record
-                             </Link>
-                           </Button>
-                        )}
                         {isActionable && (
                           <RemediationDialog 
                             employeeName={fullName}
