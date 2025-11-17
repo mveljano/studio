@@ -1,10 +1,19 @@
 export type Employee = {
   id: string;
-  name: string;
-  email: string;
-  jobRole: string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  gender: 'Male' | 'Female' | 'Other';
+  dateOfBirth: string;
+  socialSecurityNumber: string;
+  residence: string;
+  municipality: string;
+  profession: string;
+  employmentDate: string;
+  terminationDate?: string;
+  position: string;
   department: string;
-  avatar: string;
+  email: string;
   certifications: string[];
   status: 'Active' | 'On Leave' | 'Terminated';
 };

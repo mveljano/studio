@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { getEmployee, getTrainingsForEmployee, getIncidentsForEmployee } from "@/lib/data";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
   Card,
   CardContent,
@@ -22,14 +20,18 @@ import {
   CheckCircle,
   Clock,
   FileText,
-  List,
   Mail,
-  MoreVertical,
-  Phone,
   PlayCircle,
   ShieldCheck,
   User,
   XCircle,
+  Briefcase,
+  Home,
+  Cake,
+  Building,
+  Contact,
+  Calendar,
+  CalendarX,
 } from "lucide-react";
 import { TrainingModule } from "@/lib/types";
 import { differenceInDays, parseISO } from "date-fns";
@@ -56,33 +58,48 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
 
   const trainings = getTrainingsForEmployee(params.id);
   const incidents = getIncidentsForEmployee(params.id);
-  const avatar = PlaceHolderImages.find((p) => p.id === employee.avatar);
   const today = new Date();
+  const fullName = `${employee.firstName} ${employee.lastName}`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       <div className="lg:col-span-1 space-y-6">
         <Card>
-          <CardHeader className="flex flex-col items-center text-center">
-            <Image
-              src={avatar?.imageUrl || `https://picsum.photos/seed/${employee.id}/128/128`}
-              alt={employee.name}
-              width={128}
-              height={128}
-              className="rounded-full mb-4 border-4 border-card"
-              data-ai-hint={avatar?.imageHint}
-            />
-            <CardTitle className="text-2xl">{employee.name}</CardTitle>
-            <CardDescription>{employee.jobRole}</CardDescription>
-            <Badge className="mt-2">{employee.status}</Badge>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">{fullName}</CardTitle>
+            <CardDescription>{employee.position}</CardDescription>
+            <Badge className="mt-2 mx-auto">{employee.status}</Badge>
           </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            <div className="flex items-center gap-3 mb-2">
-              <User className="h-4 w-4" /> <span>{employee.department}</span>
+          <CardContent className="text-sm text-muted-foreground space-y-2">
+            <div className="flex items-center gap-3">
+              <Contact className="h-4 w-4" /> <span>{employee.employeeId}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <User className="h-4 w-4" /> <span>{employee.gender}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Cake className="h-4 w-4" /> <span>{employee.dateOfBirth}</span>
+            </div>
+             <div className="flex items-center gap-3">
+              <Briefcase className="h-4 w-4" /> <span>{employee.profession}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Building className="h-4 w-4" /> <span>{employee.department}</span>
             </div>
             <div className="flex items-center gap-3">
               <Mail className="h-4 w-4" /> <span>{employee.email}</span>
             </div>
+             <div className="flex items-center gap-3">
+              <Home className="h-4 w-4" /> <span>{employee.residence}, {employee.municipality}</span>
+            </div>
+             <div className="flex items-center gap-3">
+              <Calendar className="h-4 w-4" /> <span>Employed: {employee.employmentDate}</span>
+            </div>
+            {employee.terminationDate && (
+              <div className="flex items-center gap-3 text-destructive">
+                <CalendarX className="h-4 w-4" /> <span>Terminated: {employee.terminationDate}</span>
+              </div>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -142,7 +159,7 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
                       <TableCell className="text-right">
                         {isActionable ? (
                           <RemediationDialog 
-                            employeeName={employee.name}
+                            employeeName={fullName}
                             trainingName={training.name}
                             daysDelayed={daysDelayed}
                             completionStatus={training.status}

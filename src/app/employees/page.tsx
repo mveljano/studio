@@ -1,9 +1,13 @@
 import { employees } from "@/lib/data"
 import { columns } from "./components/columns"
 import { DataTable } from "./components/data-table"
+import { Employee } from "@/lib/types"
 
 export default async function EmployeesPage() {
-  const data = employees;
+  const data: (Employee & { name: string })[] = employees.map(e => ({
+    ...e,
+    name: `${e.firstName} ${e.lastName}`,
+  }));
 
   return (
     <div className="space-y-4">

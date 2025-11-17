@@ -28,6 +28,10 @@ const StatusBadge = ({ status }: { status: Employee["status"] }) => {
 
 
 export const columns: ColumnDef<Employee>[] = [
+    {
+    accessorKey: "employeeId",
+    header: "Employee ID",
+  },
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -41,11 +45,14 @@ export const columns: ColumnDef<Employee>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+    cell: ({ row }) => {
+      const name = `${row.original.firstName} ${row.original.lastName}`
+      return <div className="font-medium">{name}</div>
+    },
   },
   {
-    accessorKey: "jobRole",
-    header: "Job Role",
+    accessorKey: "position",
+    header: "Position",
   },
   {
     accessorKey: "department",
