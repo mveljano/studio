@@ -265,12 +265,24 @@ export function ManagePositionDialog({ department, position, onUpdate, children,
                                 <FormField
                                     control={form.control}
                                     name={`risksAndMeasures.${index}.risk`}
-                                    render={({ field }) => <Input placeholder="Risk description" {...field} className="h-9" />}
+                                    render={({ field }) => (
+                                        <FormItem className="flex-1">
+                                            <FormControl>
+                                                <Input placeholder="Risk description" {...field} className="h-9" />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
                                 />
                                 <FormField
                                     control={form.control}
                                     name={`risksAndMeasures.${index}.measure`}
-                                    render={({ field }) => <Input placeholder="Preventative measure" {...field} className="h-9" />}
+                                    render={({ field }) => (
+                                        <FormItem className="flex-1">
+                                            <FormControl>
+                                                <Input placeholder="Preventative measure" {...field} className="h-9" />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
                                 />
                                 <Button type="button" variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => remove(index)}>
                                     <X className="h-4 w-4" />
