@@ -33,7 +33,8 @@ import {
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { employees, ppeEquipment, addPpeCheckout } from "@/lib/data";
+import { addPpeCheckout } from "@/lib/data";
+import type { Employee } from "@/lib/types";
 
 const formSchema = z.object({
   employeeId: z.string().min(1, { message: "Employee is required." }),
@@ -42,7 +43,12 @@ const formSchema = z.object({
   notes: z.string().optional(),
 });
 
-export function AddPpeCheckoutForm() {
+type AddPpeCheckoutFormProps = {
+    employees: Employee[];
+    ppeEquipment: string[];
+}
+
+export function AddPpeCheckoutForm({ employees, ppeEquipment }: AddPpeCheckoutFormProps) {
   const router = useRouter();
   const { toast } = useToast();
 

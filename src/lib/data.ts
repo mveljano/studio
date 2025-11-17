@@ -47,7 +47,7 @@ export let ppeCheckouts: PPECheckout[] = [
   { id: 'ppe3', employeeId: '6', equipment: 'Mask', checkoutDate: format(subDays(today, 15), 'yyyy-MM-dd') },
 ];
 
-export const ppeEquipment: string[] = [
+export let ppeEquipment: string[] = [
   'T-shirt', 'Trousers', 'Safety Boots', 'Jacket', 'Jersey', 'Winter Jacket', 'Winter Shoes',
   'Locker Keys', 'Office Shirt', 'Long-sleeve Shirt', 'Mask Filters', 'Mask', 'Protective Glasses'
 ];
@@ -71,4 +71,16 @@ export function addPpeCheckout(checkout: Omit<PPECheckout, 'id'>) {
   };
   ppeCheckouts = [...ppeCheckouts, newCheckout];
   return newCheckout;
+}
+
+export function addPpeEquipment(equipmentName: string) {
+    const trimmedName = equipmentName.trim();
+    if (trimmedName === '') {
+        return { success: false, error: 'Equipment name cannot be empty.' };
+    }
+    if (ppeEquipment.some(item => item.toLowerCase() === trimmedName.toLowerCase())) {
+        return { success: false, error: `Equipment "${trimmedName}" already exists.` };
+    }
+    ppeEquipment = [...ppeEquipment, trimmedName].sort();
+    return { success: true };
 }
