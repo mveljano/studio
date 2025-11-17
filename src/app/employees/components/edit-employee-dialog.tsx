@@ -253,7 +253,7 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                         <SelectTrigger><SelectValue placeholder="Select a position" /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            {departments.find(d => d.name === selectedDepartment)?.positions.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                            {departments.find(d => d.name === selectedDepartment)?.positions.map(p => <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>)}
                         </SelectContent>
                     </Select>
                     <FormMessage />
