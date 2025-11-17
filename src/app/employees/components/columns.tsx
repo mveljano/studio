@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Employee } from "@/lib/types"
-import { EditEmployeeDialog } from "./edit-employee-dialog"
 
 const StatusBadge = ({ status }: { status: Employee["status"] }) => {
   const variant = {
@@ -27,8 +26,11 @@ const StatusBadge = ({ status }: { status: Employee["status"] }) => {
   return <Badge variant={variant}>{status}</Badge>;
 };
 
+export type EmployeeColumnActions = {
+  onEdit: (employee: Employee) => void;
+}
 
-export const columns: ColumnDef<Employee>[] = [
+export const getColumns = (actions: EmployeeColumnActions): ColumnDef<Employee>[] => [
     {
     accessorKey: "employeeId",
     header: "Employee ID",
@@ -83,7 +85,9 @@ export const columns: ColumnDef<Employee>[] = [
               <DropdownMenuItem asChild>
                 <Link href={`/employees/${employee.id}`}>View details</Link>
               </DropdownMenuItem>
-              <EditEmployeeDialog employee={employee} />
+               <DropdownMenuItem onClick={() => actions.onEdit(employee)}>
+                Edit profile
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
                 Delete employee

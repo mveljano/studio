@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,7 +10,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
@@ -36,7 +35,6 @@ import { Loader2 } from "lucide-react";
 import { Employee } from "@/lib/types";
 import { departments } from "@/lib/data";
 import { updateEmployeeAction } from "../[id]/actions";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -57,11 +55,12 @@ const formSchema = z.object({
 
 type EditEmployeeDialogProps = {
   employee: Employee;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
-export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
+export function EditEmployeeDialog({ employee, isOpen, onClose }: EditEmployeeDialogProps) {
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,6 +70,15 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
       terminationDate: employee.terminationDate || "",
     },
   });
+
+  useEffect(() => {
+    if(employee) {
+        form.reset({
+            ...employee,
+            terminationDate: employee.terminationDate || "",
+        });
+    }
+  }, [employee, form]);
 
   const selectedDepartment = form.watch("department");
 
@@ -90,7 +98,7 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
         title: "Success!",
         description: "Employee record has been updated.",
       });
-      setOpen(false);
+      onClose();
     } else {
       toast({
         variant: "destructive",
@@ -102,10 +110,7 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Edit profile</DropdownMenuItem>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle>Edit Employee Profile</DialogTitle>
@@ -248,7 +253,7 @@ export function EditEmployeeDialog({ employee }: EditEmployeeDialogProps) {
                 render={({ field }) => (
                 <FormItem>
                     <FormLabel>Position</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!selectedDepartment}>
+                    <Select onValueChange={field.onChange} value={field.value} disabled={!selectedDepartment}>
                         <FormControl>
                         <SelectTrigger><SelectValue placeholder="Select a position" /></SelectTrigger>
                         </FormControl>

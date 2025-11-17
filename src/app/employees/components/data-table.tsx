@@ -25,6 +25,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
+import { Employee } from "@/lib/types"
+import { EditEmployeeDialog } from "./edit-employee-dialog"
 
 interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -37,6 +39,7 @@ export function DataTable<TData extends { id: string }, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [editingEmployee, setEditingEmployee] = React.useState<Employee | null>(null);
   const router = useRouter();
 
   const table = useReactTable({
@@ -55,6 +58,7 @@ export function DataTable<TData extends { id: string }, TValue>({
   })
 
   return (
+    <>
     <Card>
       <CardContent className="p-4">
         <div className="flex items-center py-4">
@@ -138,5 +142,13 @@ export function DataTable<TData extends { id: string }, TValue>({
         </div>
       </CardContent>
     </Card>
+     {editingEmployee && (
+        <EditEmployeeDialog
+          employee={editingEmployee}
+          isOpen={!!editingEmployee}
+          onClose={() => setEditingEmployee(null)}
+        />
+      )}
+    </>
   )
 }

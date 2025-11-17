@@ -1,5 +1,5 @@
 import { getEmployees } from "@/lib/data"
-import { columns } from "./components/columns"
+import { getColumns } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { Employee } from "@/lib/types"
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,11 @@ export default async function EmployeesPage() {
     ...e,
     name: `${e.firstName} ${e.lastName}`,
   }));
+
+  const columns = getColumns({
+    // We pass an empty onEdit for now, the DataTable will handle it.
+    onEdit: () => {},
+  })
 
   return (
     <div className="space-y-4">
