@@ -20,46 +20,35 @@ export let departments: Department[] = [
                     { id: 'rm2', risk: 'Repetitive strain injury', measure: 'Regular breaks and ergonomic training' }
                 ],
                 riskLevel: 'Medium',
-                specialConditions: 'Must be forklift certified.'
-            },
-            { 
-                id: 'prod-asm', 
-                name: 'Assembly Line Worker',
-                medicalExamFrequency: 3,
-                fireProtectionExamFrequency: 2,
-                description: 'Assembles parts or units, and positions, aligns, and fastens units to assemblies, subassemblies, or frames.',
-                risksAndMeasures: [
-                    { id: 'rm3', risk: 'Repetitive motion', measure: 'Job rotation' },
-                    { id: 'rm4', risk: 'Sharp objects', measure: 'Use of protective gloves' }
-                ],
-                riskLevel: 'Medium',
-                specialConditions: ''
-            },
-            { 
-                id: 'prod-paint', 
-                name: 'Paint Shop Operator',
-                medicalExamFrequency: 1,
-                fireProtectionExamFrequency: 1,
-                description: 'Operates or tends machines to coat or paint any of a wide variety of products.',
-                risksAndMeasures: [
-                    { id: 'rm5', risk: 'Inhalation of fumes', measure: 'Use of respirators and proper ventilation' },
-                    { id: 'rm6', risk: 'Skin contact with chemicals', measure: 'Use of chemical-resistant gloves and suits' }
-                ],
-                riskLevel: 'High',
-                specialConditions: 'Requires annual respiratory fit test.'
-            },
-            { 
-                id: 'prod-weld', 
-                name: 'Welder',
-                medicalExamFrequency: 1.5,
-                fireProtectionExamFrequency: 1,
-                description: 'Uses hand-welding or flame-cutting equipment to weld or join metal components.',
-                risksAndMeasures: [
-                    { id: 'rm7', risk: 'UV radiation exposure', measure: 'Use of welding helmets and protective clothing' },
-                    { id: 'rm8', risk: 'Inhalation of metal fumes', measure: 'Use of fume extractors' }
-                ],
-                riskLevel: 'High',
-                specialConditions: 'Requires vision test every 2 years.'
+                specialConditions: 'Must be forklift certified.',
+                subPositions: [
+                    { 
+                        id: 'prod-asm', 
+                        name: 'Assembly Line Worker',
+                        medicalExamFrequency: 3,
+                        fireProtectionExamFrequency: 2,
+                        description: 'Assembles parts or units, and positions, aligns, and fastens units to assemblies, subassemblies, or frames.',
+                        risksAndMeasures: [
+                            { id: 'rm3', risk: 'Repetitive motion', measure: 'Job rotation' },
+                            { id: 'rm4', risk: 'Sharp objects', measure: 'Use of protective gloves' }
+                        ],
+                        riskLevel: 'Medium',
+                        specialConditions: ''
+                    },
+                    { 
+                        id: 'prod-paint', 
+                        name: 'Paint Shop Operator',
+                        medicalExamFrequency: 1,
+                        fireProtectionExamFrequency: 1,
+                        description: 'Operates or tends machines to coat or paint any of a wide variety of products.',
+                        risksAndMeasures: [
+                            { id: 'rm5', risk: 'Inhalation of fumes', measure: 'Use of respirators and proper ventilation' },
+                            { id: 'rm6', risk: 'Skin contact with chemicals', measure: 'Use of chemical-resistant gloves and suits' }
+                        ],
+                        riskLevel: 'High',
+                        specialConditions: 'Requires annual respiratory fit test.'
+                    }
+                ]
             }
         ]
     },
@@ -109,38 +98,167 @@ export let departments: Department[] = [
     {
         name: 'Maintenance',
         positions: [
-            { id: 'maint-sup', name: 'Maintenance Supervisor', medicalExamFrequency: 3, fireProtectionExamFrequency: 1, description: 'Supervises maintenance staff.', risksAndMeasures: [], riskLevel: 'Medium', specialConditions: '' },
-            { id: 'maint-tech', name: 'Maintenance Technician', medicalExamFrequency: 2, fireProtectionExamFrequency: 1, description: 'Repairs and maintains machinery and mechanical equipment.', risksAndMeasures: [{ id: 'rm12', risk: 'Electrical shock', measure: 'Lockout/Tagout procedures' }], riskLevel: 'High', specialConditions: '' }
+            { 
+                id: 'maint-sup', 
+                name: 'Maintenance Supervisor', 
+                medicalExamFrequency: 3, 
+                fireProtectionExamFrequency: 1, 
+                description: 'Supervises maintenance staff.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Medium', 
+                specialConditions: '',
+                subPositions: [
+                    { 
+                        id: 'maint-tech', 
+                        name: 'Maintenance Technician', 
+                        medicalExamFrequency: 2, 
+                        fireProtectionExamFrequency: 1, 
+                        description: 'Repairs and maintains machinery and mechanical equipment.', 
+                        risksAndMeasures: [{ id: 'rm12', risk: 'Electrical shock', measure: 'Lockout/Tagout procedures' }], 
+                        riskLevel: 'High', 
+                        specialConditions: '' 
+                    },
+                    { 
+                        id: 'prod-weld', 
+                        name: 'Welder',
+                        medicalExamFrequency: 1.5,
+                        fireProtectionExamFrequency: 1,
+                        description: 'Uses hand-welding or flame-cutting equipment to weld or join metal components.',
+                        risksAndMeasures: [
+                            { id: 'rm7', risk: 'UV radiation exposure', measure: 'Use of welding helmets and protective clothing' },
+                            { id: 'rm8', risk: 'Inhalation of metal fumes', measure: 'Use of fume extractors' }
+                        ],
+                        riskLevel: 'High',
+                        specialConditions: 'Requires vision test every 2 years.'
+                    }
+                ]
+            }
         ]
     },
     {
         name: 'Safety',
         positions: [
-            { id: 'safe-man', name: 'EHS Manager', medicalExamFrequency: 5, fireProtectionExamFrequency: 1, description: 'Manages environmental, health, and safety programs.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: '' },
-            { id: 'safe-coord', name: 'Safety Coordinator', medicalExamFrequency: 5, fireProtectionExamFrequency: 1, description: 'Coordinates safety programs.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: '' }
+            { 
+                id: 'safe-man', 
+                name: 'EHS Manager', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 1, 
+                description: 'Manages environmental, health, and safety programs.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '',
+                subPositions: [
+                    { 
+                        id: 'safe-coord', 
+                        name: 'Safety Coordinator', 
+                        medicalExamFrequency: 5, 
+                        fireProtectionExamFrequency: 1, 
+                        description: 'Coordinates safety programs.', 
+                        risksAndMeasures: [], 
+                        riskLevel: 'Low', 
+                        specialConditions: '' 
+                    }
+                ] 
+            }
         ]
     },
     {
         name: 'Engineering',
         positions: [
-            { id: 'eng-robot', name: 'Robotics Engineer', medicalExamFrequency: 5, fireProtectionExamFrequency: 3, description: 'Designs and develops robotic systems.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: '' },
-            { id: 'eng-mech', name: 'Mechanical Engineer', medicalExamFrequency: 5, fireProtectionExamFrequency: 3, description: 'Designs mechanical systems.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: '' },
-            { id: 'eng-elec', name: 'Electrical Engineer', medicalExamFrequency: 5, fireProtectionExamFrequency: 3, description: 'Designs electrical systems.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: '' }
+            { 
+                id: 'eng-mech', 
+                name: 'Mechanical Engineer', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Designs mechanical systems.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '' 
+            },
+            { 
+                id: 'eng-elec', 
+                name: 'Electrical Engineer', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Designs electrical systems.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '' 
+            },
+            { 
+                id: 'eng-robot', 
+                name: 'Robotics Engineer', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Designs and develops robotic systems.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '' 
+            }
         ]
     },
     {
         name: 'Supply Chain',
         positions: [
-            { id: 'sc-log', name: 'Logistics Coordinator', medicalExamFrequency: 5, fireProtectionExamFrequency: 3, description: 'Coordinates logistics.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: '' },
-            { id: 'sc-ware', name: 'Warehouse Associate', medicalExamFrequency: 4, fireProtectionExamFrequency: 2, description: 'Works in the warehouse.', risksAndMeasures: [{id: 'rm13', risk: 'Falling objects', measure: 'Hard hat usage'}], riskLevel: 'Medium', specialConditions: '' }
+            { 
+                id: 'sc-log', 
+                name: 'Logistics Coordinator', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Coordinates logistics.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '',
+                subPositions: [
+                    { 
+                        id: 'sc-ware', 
+                        name: 'Warehouse Associate', 
+                        medicalExamFrequency: 4, 
+                        fireProtectionExamFrequency: 2, 
+                        description: 'Works in the warehouse.', 
+                        risksAndMeasures: [{id: 'rm13', risk: 'Falling objects', measure: 'Hard hat usage'}], 
+                        riskLevel: 'Medium', 
+                        specialConditions: '' 
+                    }
+                ]
+            }
         ]
     },
     {
         name: 'Human Resources',
         positions: [
-            { id: 'hr-bp', name: 'HR Business Partner', medicalExamFrequency: 0, fireProtectionExamFrequency: 5, description: 'Provides HR partnership.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: 'N/A' },
-            { id: 'hr-gen', name: 'HR Generalist', medicalExamFrequency: 0, fireProtectionExamFrequency: 5, description: 'Handles general HR tasks.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: 'N/A' },
-            { id: 'hr-rec', name: 'Recruiter', medicalExamFrequency: 0, fireProtectionExamFrequency: 5, description: 'Recruits new employees.', risksAndMeasures: [], riskLevel: 'Low', specialConditions: 'N/A' }
+            { 
+                id: 'hr-bp', 
+                name: 'HR Business Partner', 
+                medicalExamFrequency: 0, 
+                fireProtectionExamFrequency: 5, 
+                description: 'Provides HR partnership.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: 'N/A',
+                subPositions: [
+                    { 
+                        id: 'hr-gen', 
+                        name: 'HR Generalist', 
+                        medicalExamFrequency: 0, 
+                        fireProtectionExamFrequency: 5, 
+                        description: 'Handles general HR tasks.', 
+                        risksAndMeasures: [], 
+                        riskLevel: 'Low', 
+                        specialConditions: 'N/A' 
+                    },
+                    { 
+                        id: 'hr-rec', 
+                        name: 'Recruiter', 
+                        medicalExamFrequency: 0, 
+                        fireProtectionExamFrequency: 5, 
+                        description: 'Recruits new employees.', 
+                        risksAndMeasures: [], 
+                        riskLevel: 'Low', 
+                        specialConditions: 'N/A' 
+                    }
+                ]
+            }
         ]
     }
 ];
