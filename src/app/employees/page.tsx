@@ -3,8 +3,10 @@ import { columns } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { Employee } from "@/lib/types"
 
+type EmployeeRow = Employee & { name: string };
+
 export default async function EmployeesPage() {
-  const data: (Employee & { name: string })[] = getEmployees().map(e => ({
+  const data: EmployeeRow[] = getEmployees().map(e => ({
     ...e,
     name: `${e.firstName} ${e.lastName}`,
   }));
