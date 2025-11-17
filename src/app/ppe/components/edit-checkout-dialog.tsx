@@ -11,6 +11,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
@@ -41,10 +42,9 @@ const formSchema = z.object({
 
 type EditCheckoutDialogProps = {
   checkout: PPECheckout & { employeeName: string; equipmentName: string; };
-  children: React.ReactNode;
 };
 
-export function EditCheckoutDialog({ checkout, children }: EditCheckoutDialogProps) {
+export function EditCheckoutDialog({ checkout }: EditCheckoutDialogProps) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,7 +86,9 @@ export function EditCheckoutDialog({ checkout, children }: EditCheckoutDialogPro
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setOpen(true); }}>{children}</DropdownMenuItem>
+      <DialogTrigger asChild>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>Edit Record</DropdownMenuItem>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Checkout Record</DialogTitle>

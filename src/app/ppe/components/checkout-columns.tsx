@@ -19,7 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type PPECheckoutRow = PPECheckout & { 
-  employeeName: string; 
+  employeeName: string;
+  employeeId: string;
   equipmentName: string;
   renewalMonths: number;
 };
@@ -85,8 +86,8 @@ const RenewalStatus = ({ row }: { row: { original: PPECheckoutRow } }) => {
 
 export const columns: ColumnDef<PPECheckoutRow>[] = [
   {
-    accessorKey: "employeeName",
-    header: "Employee",
+    accessorKey: "employeeId",
+    header: "Employee ID",
   },
   {
     accessorKey: "equipmentName",
@@ -122,9 +123,7 @@ export const columns: ColumnDef<PPECheckoutRow>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <EditCheckoutDialog checkout={checkout}>
-                Edit Record
-              </EditCheckoutDialog>
+              <EditCheckoutDialog checkout={checkout} />
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive focus:bg-destructive/10 focus:text-destructive"

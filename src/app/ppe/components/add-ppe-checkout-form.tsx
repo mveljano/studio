@@ -111,7 +111,7 @@ export function AddPpeCheckoutForm({ employees, ppeEquipment, ppeStock }: AddPpe
                       .filter(e => e.status === 'Active')
                       .map((employee) => (
                       <SelectItem key={employee.id} value={employee.id}>
-                        {employee.firstName} {employee.lastName}
+                        {employee.employeeId} - {employee.firstName} {employee.lastName}
                       </SelectItem>
                     ))}
                   </SelectContent>
