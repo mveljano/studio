@@ -11,30 +11,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { departments as initialDepartments } from "@/lib/data";
-import { Briefcase, PlusCircle, Shield, Stethoscope, FileText, AlertTriangle, Cog, ListChecks, Search, Wrench, FlaskConical, Truck, Package, UserCheck } from "lucide-react";
+import { Briefcase, PlusCircle, Shield, Stethoscope, FileText, AlertTriangle, Cog, ListChecks, Wrench, FlaskConical, Truck, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ManageDepartmentDialog } from "./components/manage-department-dialog";
 import { ManagePositionDialog } from "./components/manage-position-dialog";
 import { useState } from "react";
 import type { Department, Position } from "@/lib/types";
-import { SVGProps } from "react";
-
-const EHSLogo = (props: SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M16.3 7.6c.3-.3.3-.8 0-1.1s-.8-.3-1.1 0L12 9.8l-3.2-3.3c-.3-.3-.8-.3-1.1 0s-.3.8 0 1.1L10.9 11l-3.2 3.3c-.3.3-.3.8 0 1.1s.8.3 1.1 0L12 12.2l3.2 3.3c.3.3.8.3 1.1 0s.3-.8 0-1.1L13.1 11l3.2-3.4z"/>
-      <path d="M12 2a3 3 0 0 0-3 3v1H8a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1v1a3 3 0 0 0 6 0v-1h1a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-1V7a2 2 0 0 0-2-2V4a3 3 0 0 0-3-3zm-1 11h2v2h-2v-2z"/>
-      <path d="M17.7 13.3A7.5 7.5 0 1 0 5.4 17M12 17.5V14l-2.5 3.5"/>
-    </svg>
-);
-  
 
 const departmentIcons: Record<string, React.ReactNode> = {
     'Production': <Cog className="h-5 w-5 text-primary" />,
-    'Quality Assurance': <><ListChecks className="h-5 w-5 text-primary" /><Search className="h-5 w-5 text-primary" /></>,
+    'Quality Assurance': <ListChecks className="h-5 w-5 text-primary" />,
     'Maintenance': <Wrench className="h-5 w-5 text-primary" />,
-    'EHS': <EHSLogo className="h-5 w-5 text-primary" />,
+    'EHS': <Shield className="h-5 w-5 text-primary" />,
     'Engineering': <FlaskConical className="h-5 w-5 text-primary" />,
-    'Supply Chain': <><Truck className="h-5 w-5 text-primary" /><Package className="h-5 w-5 text-primary" /></>,
+    'Supply Chain': <Truck className="h-5 w-5 text-primary" />,
     'Human Resources': <UserCheck className="h-5 w-5 text-primary" />
 }
 
