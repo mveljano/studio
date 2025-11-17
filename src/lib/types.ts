@@ -40,12 +40,28 @@ export type SafetyIncident = {
 
 export type TrainingStatus = 'Completed' | 'In Progress' | 'Overdue' | 'Not Started';
 
+export type PPEEquipment = {
+  id: string;
+  name: string;
+  renewalMonths: number;
+  stock: number;
+};
+
 export type PPECheckout = {
   id: string;
   employeeId: string;
-  equipment: string;
+  equipmentId: string;
   checkoutDate: string;
   size?: string;
+  notes?: string;
+  isPremature: boolean;
+};
+
+export type PPEInboundDelivery = {
+  id: string;
+  equipmentId: string;
+  quantity: number;
+  deliveryDate: string;
   notes?: string;
 };
 
@@ -71,4 +87,5 @@ export type Department = {
     name: string;
     positions: Position[];
 };
+
 

@@ -1,15 +1,16 @@
 
 "use server";
 
-import { addPpeEquipment as addPpeEquipmentData, editPpeEquipment as editPpeEquipmentData, removePpeEquipment as removePpeEquipmentData, updatePpeCheckout as updatePpeCheckoutData } from "@/lib/data";
-import { PPECheckout } from "@/lib/types";
+import { addPpeEquipment as addPpeEquipmentData, editPpeEquipment as editPpeEquipmentData, removePpeEquipment as removePpeEquipmentData, updatePpeCheckout as updatePpeCheckoutData, addPpeInboundDelivery as addPpeInboundDeliveryData } from "@/lib/data";
+import { PPECheckout, PPEEquipment, PPEInboundDelivery } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
-export async function addPpeEquipment(equipmentName: string) {
+export async function addPpeEquipment(equipment: Omit<PPEEquipment, 'id' | 'stock'>) {
   try {
-    const result = addPpeEquipmentData(equipmentName);
+    const result = addPpeEquipmentData(equipment);
     if (result.success) {
       revalidatePath("/ppe");
+      revalidatePath("/ppe/inventory");
       return { success: true };
     } else {
       return { success: false, error: result.error };
@@ -20,11 +21,12 @@ export async function addPpeEquipment(equipmentName: string) {
   }
 }
 
-export async function editPpeEquipment(oldName: string, newName: string) {
+export async function editPpeEquipment(equipmentId: string, equipmentData: Partial<Omit<PPEEquipment, 'id' | 'stock'>>) {
     try {
-      const result = editPpeEquipmentData(oldName, newName);
+      const result = editPpeEquipmentData(equipmentId, equipmentData);
       if (result.success) {
         revalidatePath("/ppe");
+        revalidatePath("/ppe/inventory");
         return { success: true };
       } else {
         return { success: false, error: result.error };
@@ -35,11 +37,12 @@ export async function editPpeEquipment(oldName: string, newName: string) {
     }
   }
   
-  export async function removePpeEquipment(equipmentName: string) {
+  export async function removePpeEquipment(equipmentId: string) {
     try {
-      const result = removePpeEquipmentData(equipmentName);
+      const result = removePpeEquipmentData(equipmentId);
       if (result.success) {
         revalidatePath("/ppe");
+        revalidatePath("/ppe/inventory");
         return { success: true };
       } else {
         return { success: false, error: result.error };
@@ -62,5 +65,19 @@ export async function editPpeEquipment(oldName: string, newName: string) {
     } catch (error) {
       console.error("Error updating PPE checkout:", error);
       return { success: false, error: "Failed to update checkout record." };
+    }
+  }
+
+  export async function addPpeInboundDelivery(delivery: Omit<PPEInboundDelivery, 'id' | 'deliveryDate'>) {
+    try {
+      const result = addPpeInboundDeliveryData(delivery);
+      if (result.success) {
+        revalidatePath('/ppe/inventory');
+        return { success: true };
+      }
+      return { success: false, error: result.error };
+    } catch (error) {
+      console.error("Error adding inbound delivery:", error);
+      return { success: false, error: "Failed to add delivery." };
     }
   }

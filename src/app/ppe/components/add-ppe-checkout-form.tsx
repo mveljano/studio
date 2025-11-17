@@ -1,16 +1,17 @@
 
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,48 +35,66 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { addPpeCheckout } from "@/lib/data";
-import type { Employee } from "@/lib/types";
+import type { Employee, PPEEquipment } from "@/lib/types";
+import { Loader2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   employeeId: z.string().min(1, { message: "Employee is required." }),
-  equipment: z.string().min(1, { message: "Equipment is required." }),
+  equipmentId: z.string().min(1, { message: "Equipment is required." }),
   size: z.string().optional(),
   notes: z.string().optional(),
+  isPremature: z.boolean().default(false),
 });
 
 type AddPpeCheckoutFormProps = {
     employees: Employee[];
-    ppeEquipment: string[];
+    ppeEquipment: PPEEquipment[];
+    ppeStock: Record<string, number>;
 }
 
-export function AddPpeCheckoutForm({ employees, ppeEquipment }: AddPpeCheckoutFormProps) {
+export function AddPpeCheckoutForm({ employees, ppeEquipment, ppeStock }: AddPpeCheckoutFormProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       employeeId: "",
-      equipment: "",
+      equipmentId: "",
       size: "",
       notes: "",
+      isPremature: false,
     },
   });
 
+  const selectedEquipmentId = form.watch("equipmentId");
+  const currentStock = selectedEquipmentId ? ppeStock[selectedEquipmentId] : undefined;
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    addPpeCheckout({
+    setLoading(true);
+
+    const result = addPpeCheckout({
       ...values,
-      checkoutDate: format(new Date(), "yyyy-MM-dd"),
+      checkoutDate: new Date().toISOString(),
     });
 
-    toast({
-      title: "Success!",
-      description: `Checkout for ${values.equipment} has been recorded.`,
-    });
-    
-    // Reset form and refresh the page to show the new entry
-    form.reset();
-    router.refresh();
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: `Checkout has been recorded.`,
+      });
+      form.reset();
+      router.refresh();
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: result.error,
+        });
+    }
+    setLoading(false);
   }
 
   return (
@@ -116,7 +135,7 @@ export function AddPpeCheckoutForm({ employees, ppeEquipment }: AddPpeCheckoutFo
               />
               <FormField
                 control={form.control}
-                name="equipment"
+                name="equipmentId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Equipment</FormLabel>
@@ -128,12 +147,17 @@ export function AddPpeCheckoutForm({ employees, ppeEquipment }: AddPpeCheckoutFo
                       </FormControl>
                       <SelectContent>
                         {ppeEquipment.map((item) => (
-                          <SelectItem key={item} value={item}>
-                            {item}
+                          <SelectItem key={item.id} value={item.id} disabled={item.stock <= 0}>
+                            {item.name} ({item.stock} in stock)
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                     {currentStock !== undefined && currentStock <= 0 && (
+                        <FormDescription className="text-destructive">
+                            This item is out of stock.
+                        </FormDescription>
+                     )}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -151,6 +175,26 @@ export function AddPpeCheckoutForm({ employees, ppeEquipment }: AddPpeCheckoutFo
                   </FormItem>
                 )}
               />
+               <FormField
+                control={form.control}
+                name="isPremature"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel>Premature Replacement</FormLabel>
+                      <FormDescription>
+                        Is this replacing lost or damaged equipment before its renewal date?
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
              <FormField
                 control={form.control}
@@ -159,13 +203,16 @@ export function AddPpeCheckoutForm({ employees, ppeEquipment }: AddPpeCheckoutFo
                   <FormItem>
                     <FormLabel>Notes (optional)</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Any additional notes..." {...field} />
+                      <Textarea placeholder="Reason for premature replacement, etc..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            <Button type="submit">Add Checkout</Button>
+            <Button type="submit" disabled={loading || (currentStock !== undefined && currentStock <= 0)}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Add Checkout
+            </Button>
           </form>
         </Form>
       </CardContent>

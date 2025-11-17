@@ -31,7 +31,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function CheckoutDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -51,6 +51,11 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
     },
+    initialState: {
+        pagination: {
+            pageSize: 5,
+        }
+    }
   })
 
   return (
@@ -64,10 +69,10 @@ export function DataTable<TData, TValue>({
       <CardContent>
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter by employee ID..."
-            value={(table.getColumn("employeeId")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter by employee..."
+            value={(table.getColumn("employeeName")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("employeeId")?.setFilterValue(event.target.value)
+              table.getColumn("employeeName")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -100,7 +105,12 @@ export function DataTable<TData, TValue>({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id} onClick={(e) => {
+                        // Prevent row click from triggering when clicking on the action menu
+                        if (cell.column.id === 'actions') {
+                            e.stopPropagation();
+                        }
+                      }}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}

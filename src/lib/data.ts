@@ -1,7 +1,5 @@
-
-
-import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department, Position, RiskAndMeasure } from '@/lib/types';
-import { subDays, addDays, format } from 'date-fns';
+import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department, Position, RiskAndMeasure, PPEEquipment, PPEInboundDelivery } from '@/lib/types';
+import { subDays, addDays, format, subMonths } from 'date-fns';
 
 const today = new Date();
 
@@ -33,8 +31,7 @@ export let departments: Department[] = [
                 id: 'eng-robot', 
                 name: 'Robotics Engineer', 
                 medicalExamFrequency: 5, 
-                fireProtectionExamFrequency: 3, 
-                description: 'Designs and develops robotic systems.', 
+                fireProtectionExamFrequency: 3,                 description: 'Designs and develops robotic systems.', 
                 risksAndMeasures: [], 
                 riskLevel: 'Low', 
                 specialConditions: '' 
@@ -250,7 +247,7 @@ export let departments: Department[] = [
                     { 
                         id: 'sc-ware', 
                         name: 'Warehouse Associate', 
-                        medicalExamFrequency: 4,                         fireProtectionExamFrequency: 2, 
+                        medicalExamFrequency: 4, fireProtectionExamFrequency: 2, 
                         description: 'Works in the warehouse.', 
                         risksAndMeasures: [{id: 'rm13', risk: 'Falling objects', measure: 'Hard hat usage'}], 
                         riskLevel: 'Medium', 
@@ -299,150 +296,152 @@ export let safetyIncidents: SafetyIncident[] = [
   { id: 's3', employeeId: '3', date: format(subDays(today, 120), 'yyyy-MM-dd'), description: 'Minor cut on hand from exposed wiring.', type: 'Injury' },
 ];
 
+export let ppeEquipment: PPEEquipment[] = [
+  { id: 'ppe-equip-1', name: 'T-shirt', renewalMonths: 3, stock: 100 },
+  { id: 'ppe-equip-2', name: 'Trousers', renewalMonths: 6, stock: 80 },
+  { id: 'ppe-equip-3', name: 'Safety Boots', renewalMonths: 24, stock: 50 },
+  { id: 'ppe-equip-4', name: 'Jacket', renewalMonths: 60, stock: 40 },
+  { id: 'ppe-equip-5', name: 'Jersey', renewalMonths: 12, stock: 60 },
+  { id: 'ppe-equip-6', name: 'Winter Jacket', renewalMonths: 60, stock: 30 },
+  { id: 'ppe-equip-7', name: 'Winter Shoes', renewalMonths: 24, stock: 30 },
+  { id: 'ppe-equip-8', name: 'Locker Keys', renewalMonths: 0, stock: 200 }, // 0 = no renewal
+  { id: 'ppe-equip-9', name: 'Office Shirt', renewalMonths: 12, stock: 50 },
+  { id: 'ppe-equip-10', name: 'Long-sleeve Shirt', renewalMonths: 6, stock: 70 },
+  { id: 'ppe-equip-11', name: 'Mask Filters', renewalMonths: 1, stock: 300 },
+  { id: 'ppe-equip-12', name: 'Mask', renewalMonths: 12, stock: 50 },
+  { id: 'ppe-equip-13', name: 'Protective Glasses', renewalMonths: 24, stock: 100 },
+];
+
 export let ppeCheckouts: PPECheckout[] = [
-  { id: 'ppe1', employeeId: '1', equipment: 'Safety Boots', checkoutDate: format(subDays(today, 60), 'yyyy-MM-dd'), size: '10' },
-  { id: 'ppe2', employeeId: '2', equipment: 'Jacket', checkoutDate: format(subDays(today, 30), 'yyyy-MM-dd'), size: 'M' },
-  { id: 'ppe3', employeeId: '6', equipment: 'Mask', checkoutDate: format(subDays(today, 15), 'yyyy-MM-dd') },
+  { id: 'ppe-chk-1', employeeId: '1', equipmentId: 'ppe-equip-3', checkoutDate: format(subMonths(today, 25), 'yyyy-MM-dd'), size: '10', isPremature: false },
+  { id: 'ppe-chk-2', employeeId: '2', equipmentId: 'ppe-equip-4', checkoutDate: format(subMonths(today, 50), 'yyyy-MM-dd'), size: 'M', isPremature: false },
+  { id: 'ppe-chk-3', employeeId: '6', equipmentId: 'ppe-equip-12', checkoutDate: format(subMonths(today, 11), 'yyyy-MM-dd'), isPremature: false },
+  { id: 'ppe-chk-4', employeeId: '1', equipmentId: 'ppe-equip-1', checkoutDate: format(subMonths(today, 1), 'yyyy-MM-dd'), size: 'L', isPremature: false },
+  { id: 'ppe-chk-5', employeeId: '3', equipmentId: 'ppe-equip-2', checkoutDate: format(subMonths(today, 7), 'yyyy-MM-dd'), size: '34', isPremature: true, notes: 'Original pair torn on machinery.' },
 ];
 
-export let ppeEquipment: string[] = [
-  'T-shirt', 'Trousers', 'Safety Boots', 'Jacket', 'Jersey', 'Winter Jacket', 'Winter Shoes',
-  'Locker Keys', 'Office Shirt', 'Long-sleeve Shirt', 'Mask Filters', 'Mask', 'Protective Glasses'
+export let ppeInboundDeliveries: PPEInboundDelivery[] = [
+    { id: 'del-1', equipmentId: 'ppe-equip-1', quantity: 50, deliveryDate: format(subDays(today, 10), 'yyyy-MM-dd'), notes: 'From Supplier A' },
+    { id: 'del-2', equipmentId: 'ppe-equip-3', quantity: 20, deliveryDate: format(subDays(today, 5), 'yyyy-MM-dd') },
+    { id: 'del-3', equipmentId: 'ppe-equip-11', quantity: 200, deliveryDate: format(subDays(today, 2), 'yyyy-MM-dd'), notes: 'From Supplier B' },
 ];
 
-export function getEmployee(id: string) {
-  return employees.find(e => e.id === id);
+// --- GETTERS ---
+export function getEmployees() { return employees; }
+export function getEmployee(id: string) { return employees.find(e => e.id === id); }
+export function getTrainingsForEmployee(employeeId: string) { return trainingModules.filter(t => t.employeeId === employeeId); }
+export function getIncidentsForEmployee(employeeId:string) { return safetyIncidents.filter(i => i.employeeId === employeeId); }
+export function getPpeCheckouts() { return ppeCheckouts; }
+export function getPpeEquipment() { return ppeEquipment; }
+export function getPpeInboundDeliveries() { return ppeInboundDeliveries; }
+export function getPpeStock() {
+    const stock: Record<string, number> = {};
+    ppeEquipment.forEach(eq => {
+        stock[eq.id] = eq.stock;
+    });
+    return stock;
 }
 
-export function getEmployees() {
-    return employees;
-}
 
+// --- MUTATIONS ---
 export function updateEmployee(updatedEmployee: Employee) {
     const index = employees.findIndex(e => e.id === updatedEmployee.id);
-    if (index === -1) {
-        return { success: false, error: "Employee not found." };
-    }
+    if (index === -1) { return { success: false, error: "Employee not found." }; }
     employees[index] = updatedEmployee;
     return { success: true };
 }
 
-
-export function getTrainingsForEmployee(employeeId: string) {
-  return trainingModules.filter(t => t.employeeId === employeeId);
-}
-
-export function getIncidentsForEmployee(employeeId:string) {
-  return safetyIncidents.filter(i => i.employeeId === employeeId);
-}
-
 export function addPpeCheckout(checkout: Omit<PPECheckout, 'id'>) {
-  const newCheckout: PPECheckout = {
-    id: `ppe${ppeCheckouts.length + 1}`,
-    ...checkout,
-  };
-  ppeCheckouts = [...ppeCheckouts, newCheckout];
-  return newCheckout;
+    const equipment = ppeEquipment.find(e => e.id === checkout.equipmentId);
+    if (!equipment) {
+        return { success: false, error: "Equipment not found." };
+    }
+    if (equipment.stock < 1) {
+        return { success: false, error: "Not enough stock to complete checkout." };
+    }
+    
+    equipment.stock -= 1;
+    const newCheckout: PPECheckout = { id: `ppe-chk-${Date.now()}`, ...checkout, };
+    ppeCheckouts = [newCheckout, ...ppeCheckouts];
+    return { success: true, checkout: newCheckout };
 }
 
 export function updatePpeCheckout(updatedCheckout: PPECheckout) {
     const index = ppeCheckouts.findIndex(c => c.id === updatedCheckout.id);
-    if (index === -1) {
-        return { success: false, error: "Checkout record not found." };
-    }
+    if (index === -1) { return { success: false, error: "Checkout record not found." }; }
     ppeCheckouts[index] = updatedCheckout;
     return { success: true };
 }
 
-export function addPpeEquipment(equipmentName: string) {
-    const trimmedName = equipmentName.trim();
-    if (trimmedName === '') {
-        return { success: false, error: 'Equipment name cannot be empty.' };
-    }
-    if (ppeEquipment.some(item => item.toLowerCase() === trimmedName.toLowerCase())) {
+export function addPpeEquipment(equipmentData: Omit<PPEEquipment, 'id' | 'stock'>) {
+    const trimmedName = equipmentData.name.trim();
+    if (trimmedName === '') { return { success: false, error: 'Equipment name cannot be empty.' }; }
+    if (ppeEquipment.some(item => item.name.toLowerCase() === trimmedName.toLowerCase())) {
         return { success: false, error: `Equipment "${trimmedName}" already exists.` };
     }
-    ppeEquipment = [...ppeEquipment, trimmedName].sort();
+    const newEquipment: PPEEquipment = {
+        id: `ppe-equip-${Date.now()}`,
+        name: trimmedName,
+        renewalMonths: equipmentData.renewalMonths,
+        stock: 0,
+    };
+    ppeEquipment = [...ppeEquipment, newEquipment].sort((a,b) => a.name.localeCompare(b.name));
     return { success: true };
 }
 
-export function editPpeEquipment(oldName: string, newName: string) {
-    const trimmedNewName = newName.trim();
-    if (trimmedNewName === '') {
-        return { success: false, error: 'Equipment name cannot be empty.' };
-    }
-    if (ppeEquipment.some(item => item.toLowerCase() === trimmedNewName.toLowerCase() && item.toLowerCase() !== oldName.toLowerCase())) {
-        return { success: false, error: `Equipment "${trimmedNewName}" already exists.` };
-    }
-    const index = ppeEquipment.findIndex(item => item.toLowerCase() === oldName.toLowerCase());
-    if (index === -1) {
-        return { success: false, error: `Equipment "${oldName}" not found.` };
-    }
-    const updatedEquipment = [...ppeEquipment];
-    updatedEquipment[index] = trimmedNewName;
-    ppeEquipment = updatedEquipment.sort();
+export function editPpeEquipment(equipmentId: string, equipmentData: Partial<Omit<PPEEquipment, 'id' | 'stock'>>) {
+    const index = ppeEquipment.findIndex(item => item.id === equipmentId);
+    if (index === -1) { return { success: false, error: `Equipment not found.` }; }
 
-    // Also update checkouts
-    ppeCheckouts = ppeCheckouts.map(checkout => 
-        checkout.equipment === oldName ? { ...checkout, equipment: trimmedNewName } : checkout
-    );
+    if (equipmentData.name) {
+        const trimmedNewName = equipmentData.name.trim();
+        if (trimmedNewName === '') { return { success: false, error: 'Equipment name cannot be empty.' }; }
+        if (ppeEquipment.some(item => item.name.toLowerCase() === trimmedNewName.toLowerCase() && item.id !== equipmentId)) {
+            return { success: false, error: `Equipment name "${trimmedNewName}" already exists.` };
+        }
+        ppeEquipment[index].name = trimmedNewName;
+    }
+    if (equipmentData.renewalMonths !== undefined) {
+        ppeEquipment[index].renewalMonths = equipmentData.renewalMonths;
+    }
 
+    ppeEquipment.sort((a,b) => a.name.localeCompare(b.name));
     return { success: true };
 }
 
-export function removePpeEquipment(equipmentName: string) {
-    const index = ppeEquipment.findIndex(item => item.toLowerCase() === equipmentName.toLowerCase());
-    if (index === -1) {
-        return { success: false, error: `Equipment "${equipmentName}" not found.` };
+export function removePpeEquipment(equipmentId: string) {
+    const equipment = ppeEquipment.find(eq => eq.id === equipmentId);
+    if (!equipment) { return { success: false, error: `Equipment not found.` }; }
+    if (ppeCheckouts.some(checkout => checkout.equipmentId === equipmentId)) {
+        return { success: false, error: `Cannot remove "${equipment.name}" as it has checkout records.`};
     }
-    // Prevent deletion if the equipment is in use
-    if (ppeCheckouts.some(checkout => checkout.equipment === equipmentName)) {
-        return { success: false, error: `Cannot remove "${equipmentName}" as it is currently checked out.`};
-    }
-    ppeEquipment = ppeEquipment.filter(item => item.toLowerCase() !== equipmentName.toLowerCase());
+    ppeEquipment = ppeEquipment.filter(item => item.id !== equipmentId);
     return { success: true };
 }
 
-export function addDepartment(departmentName: string) {
-    const trimmedName = departmentName.trim();
-    if (trimmedName === '') {
-        return { success: false, error: 'Department name cannot be empty.' };
+export function addPpeInboundDelivery(delivery: Omit<PPEInboundDelivery, 'id' | 'deliveryDate'>) {
+    const equipment = ppeEquipment.find(eq => eq.id === delivery.equipmentId);
+    if (!equipment) {
+        return { success: false, error: "Equipment not found." };
     }
-    if (departments.some(d => d.name.toLowerCase() === trimmedName.toLowerCase())) {
-        return { success: false, error: `Department "${trimmedName}" already exists.` };
+    if (delivery.quantity <= 0) {
+        return { success: false, error: "Quantity must be positive." };
     }
-    departments = [...departments, { name: trimmedName, positions: [] }].sort((a, b) => a.name.localeCompare(b.name));
-    return { success: true };
+
+    equipment.stock += delivery.quantity;
+
+    const newDelivery: PPEInboundDelivery = {
+        id: `del-${Date.now()}`,
+        deliveryDate: format(new Date(), "yyyy-MM-dd"),
+        ...delivery,
+    };
+    ppeInboundDeliveries = [newDelivery, ...ppeInboundDeliveries];
+    return { success: true, delivery: newDelivery };
 }
 
-export function editDepartment(oldName: string, newName: string) {
-    const trimmedNewName = newName.trim();
-    if (trimmedNewName === '') {
-        return { success: false, error: 'Department name cannot be empty.' };
-    }
-    const index = departments.findIndex(d => d.name.toLowerCase() === oldName.toLowerCase());
-    if (index === -1) {
-        return { success: false, error: `Department "${oldName}" not found.` };
-    }
-    if (departments.some(d => d.name.toLowerCase() === trimmedNewName.toLowerCase() && d.name.toLowerCase() !== oldName.toLowerCase())) {
-        return { success: false, error: `Department "${trimmedNewName}" already exists.` };
-    }
-    departments[index].name = trimmedNewName;
-    departments.sort((a, b) => a.name.localeCompare(b.name));
-    // Also update employees
-    employees = employees.map(e => e.department === oldName ? { ...e, department: trimmedNewName } : e);
-    return { success: true };
-}
 
-export function removeDepartment(departmentName: string) {
-    if (employees.some(e => e.department === departmentName)) {
-        return { success: false, error: `Cannot remove "${departmentName}" as it is assigned to one or more employees.`};
-    }
-    departments = departments.filter(d => d.name.toLowerCase() !== departmentName.toLowerCase());
-    return { success: true };
-}
+// --- Department/Position Mutations ---
 
-// Recursive function to find a position by ID in a list of positions
 function findPositionInArray(positions: Position[], positionId: string): { position: Position | null, parentArray: Position[] | null, index: number } {
     for (let i = 0; i < positions.length; i++) {
         const position = positions[i];
@@ -459,16 +458,48 @@ function findPositionInArray(positions: Position[], positionId: string): { posit
     return { position: null, parentArray: null, index: -1 };
 }
 
-// Find a position and its parent array within a department
 function findPositionAndParent(departmentName: string, positionId: string): { position: Position | null, parentArray: Position[] | null, index: number } {
     const department = departments.find(d => d.name === departmentName);
     if (!department) return { position: null, parentArray: null, index: -1 };
     return findPositionInArray(department.positions, positionId);
 }
 
-// Recursive function to check for name collisions
 function isNameDuplicate(positions: Position[], newName: string, excludedId?: string): boolean {
     return positions.some(p => p.name.toLowerCase() === newName.toLowerCase() && p.id !== excludedId);
+}
+
+export function addDepartment(departmentName: string) {
+    const trimmedName = departmentName.trim();
+    if (trimmedName === '') {
+        return { success: false, error: 'Department name cannot be empty.' };
+    }
+    if (departments.some(d => d.name.toLowerCase() === trimmedName.toLowerCase())) {
+        return { success: false, error: `Department "${trimmedName}" already exists.` };
+    }
+    departments = [...departments, { name: trimmedName, positions: [] }].sort((a, b) => a.name.localeCompare(b.name));
+    return { success: true };
+}
+
+export function editDepartment(oldName: string, newName: string) {
+    const trimmedNewName = newName.trim();
+    if (trimmedNewName === '') { return { success: false, error: 'Department name cannot be empty.' }; }
+    const index = departments.findIndex(d => d.name.toLowerCase() === oldName.toLowerCase());
+    if (index === -1) { return { success: false, error: `Department "${oldName}" not found.` }; }
+    if (departments.some(d => d.name.toLowerCase() === trimmedNewName.toLowerCase() && d.name.toLowerCase() !== oldName.toLowerCase())) {
+        return { success: false, error: `Department "${trimmedNewName}" already exists.` };
+    }
+    departments[index].name = trimmedNewName;
+    departments.sort((a, b) => a.name.localeCompare(b.name));
+    employees = employees.map(e => e.department === oldName ? { ...e, department: trimmedNewName } : e);
+    return { success: true };
+}
+
+export function removeDepartment(departmentName: string) {
+    if (employees.some(e => e.department === departmentName)) {
+        return { success: false, error: `Cannot remove "${departmentName}" as it is assigned to one or more employees.`};
+    }
+    departments = departments.filter(d => d.name.toLowerCase() !== departmentName.toLowerCase());
+    return { success: true };
 }
 
 
@@ -480,7 +511,7 @@ export function addPosition(departmentName: string, positionData: Omit<Position,
 
     const newPosition: Position = {
         ...positionData,
-        id: `pos-${Date.now()}-${Math.random()}`, // Simple unique ID
+        id: `pos-${Date.now()}-${Math.random()}`,
         risksAndMeasures: positionData.risksAndMeasures || [],
         subPositions: []
     };
@@ -518,7 +549,6 @@ export function editPosition(departmentName: string, positionId: string, positio
 
     const oldName = position.name;
     
-    // Check for name collision if name is being changed
     if (positionData.name && positionData.name !== oldName) {
         if (isNameDuplicate(parentArray, positionData.name, positionId)) {
             return { success: false, error: `A position with the name "${positionData.name}" already exists at this level.` };
@@ -527,7 +557,6 @@ export function editPosition(departmentName: string, positionId: string, positio
     
     Object.assign(position, positionData);
 
-    // Also update employees if the position name changed
     if (positionData.name && positionData.name !== oldName) {
         employees = employees.map(e => (e.department === departmentName && e.position === oldName) ? { ...e, position: positionData.name! } : e);
     }
@@ -536,7 +565,6 @@ export function editPosition(departmentName: string, positionId: string, positio
     
     return { success: true, position };
 }
-
 
 export function removePosition(departmentName: string, positionId: string) {
     const { position: positionToRemove, parentArray } = findPositionAndParent(departmentName, positionId);

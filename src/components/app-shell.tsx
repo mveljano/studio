@@ -14,6 +14,9 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -34,10 +37,13 @@ import {
   Shield,
   Building,
   ClipboardList,
+  Boxes,
+  Truck,
 } from "lucide-react";
 import { Logo } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar');
 
@@ -61,6 +67,10 @@ const navItems = [
     href: "/ppe",
     icon: Shield,
     label: "PPE",
+    children: [
+        { href: "/ppe", label: "Checkouts", icon: Users },
+        { href: "/ppe/inventory", label: "Inventory", icon: Boxes },
+    ]
   },
   {
     href: "/organization",
@@ -84,17 +94,47 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <SidebarContent>
           <SidebarMenu>
             {navItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
-                  <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href)}
-                    className="w-full"
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
+                item.children ? (
+                    <Collapsible key={item.href} asChild>
+                        <SidebarMenuItem>
+                            <CollapsibleTrigger asChild>
+                                <SidebarMenuButton
+                                    isActive={pathname.startsWith(item.href)}
+                                    className="w-full"
+                                >
+                                    <item.icon className="h-4 w-4" />
+                                    <span>{item.label}</span>
+                                </SidebarMenuButton>
+                            </CollapsibleTrigger>
+                             <CollapsibleContent>
+                                <SidebarMenuSub>
+                                    {item.children.map((child) => (
+                                        <SidebarMenuSubItem key={child.href}>
+                                            <Link href={child.href}>
+                                                 <SidebarMenuSubButton isActive={pathname === child.href}>
+                                                    <child.icon className="h-4 w-4" />
+                                                    <span>{child.label}</span>
+                                                 </SidebarMenuSubButton>
+                                            </Link>
+                                        </SidebarMenuSubItem>
+                                    ))}
+                                </SidebarMenuSub>
+                             </CollapsibleContent>
+                        </SidebarMenuItem>
+                    </Collapsible>
+                ) : (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            className="w-full"
+                        >
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                  </SidebarMenuItem>
+                )
             ))}
           </SidebarMenu>
         </SidebarContent>
