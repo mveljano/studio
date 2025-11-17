@@ -84,3 +84,40 @@ export function addPpeEquipment(equipmentName: string) {
     ppeEquipment = [...ppeEquipment, trimmedName].sort();
     return { success: true };
 }
+
+export function editPpeEquipment(oldName: string, newName: string) {
+    const trimmedNewName = newName.trim();
+    if (trimmedNewName === '') {
+        return { success: false, error: 'Equipment name cannot be empty.' };
+    }
+    if (ppeEquipment.some(item => item.toLowerCase() === trimmedNewName.toLowerCase() && item.toLowerCase() !== oldName.toLowerCase())) {
+        return { success: false, error: `Equipment "${trimmedNewName}" already exists.` };
+    }
+    const index = ppeEquipment.findIndex(item => item.toLowerCase() === oldName.toLowerCase());
+    if (index === -1) {
+        return { success: false, error: `Equipment "${oldName}" not found.` };
+    }
+    const updatedEquipment = [...ppeEquipment];
+    updatedEquipment[index] = trimmedNewName;
+    ppeEquipment = updatedEquipment.sort();
+
+    // Also update checkouts
+    ppeCheckouts = ppeCheckouts.map(checkout => 
+        checkout.equipment === oldName ? { ...checkout, equipment: trimmedNewName } : checkout
+    );
+
+    return { success: true };
+}
+
+export function removePpeEquipment(equipmentName: string) {
+    const index = ppeEquipment.findIndex(item => item.toLowerCase() === equipmentName.toLowerCase());
+    if (index === -1) {
+        return { success: false, error: `Equipment "${equipmentName}" not found.` };
+    }
+    // Prevent deletion if the equipment is in use
+    if (ppeCheckouts.some(checkout => checkout.equipment === equipmentName)) {
+        return { success: false, error: `Cannot remove "${equipmentName}" as it is currently checked out.`};
+    }
+    ppeEquipment = ppeEquipment.filter(item => item.toLowerCase() !== equipmentName.toLowerCase());
+    return { success: true };
+}
