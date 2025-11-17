@@ -7,6 +7,145 @@ const today = new Date();
 
 export let departments: Department[] = [
     {
+        name: 'Engineering',
+        positions: [
+            { 
+                id: 'eng-mech', 
+                name: 'Mechanical Engineer', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Designs mechanical systems.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '' 
+            },
+            { 
+                id: 'eng-elec', 
+                name: 'Electrical Engineer', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Designs electrical systems.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '' 
+            },
+            { 
+                id: 'eng-robot', 
+                name: 'Robotics Engineer', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 3, 
+                description: 'Designs and develops robotic systems.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '' 
+            }
+        ]
+    },
+    {
+        name: 'EHS',
+        positions: [
+            { 
+                id: 'safe-man', 
+                name: 'EHS Manager', 
+                medicalExamFrequency: 5, 
+                fireProtectionExamFrequency: 1, 
+                description: 'Manages environmental, health, and safety programs.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: '',
+                subPositions: [
+                    { 
+                        id: 'safe-coord', 
+                        name: 'Safety Coordinator', 
+                        medicalExamFrequency: 5, 
+                        fireProtectionExamFrequency: 1, 
+                        description: 'Coordinates safety programs.', 
+                        risksAndMeasures: [], 
+                        riskLevel: 'Low', 
+                        specialConditions: '' 
+                    }
+                ] 
+            }
+        ]
+    },
+    {
+        name: 'Human Resources',
+        positions: [
+            { 
+                id: 'hr-bp', 
+                name: 'HR Business Partner', 
+                medicalExamFrequency: 0, 
+                fireProtectionExamFrequency: 5, 
+                description: 'Provides HR partnership.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Low', 
+                specialConditions: 'N/A',
+                subPositions: [
+                    { 
+                        id: 'hr-gen', 
+                        name: 'HR Generalist', 
+                        medicalExamFrequency: 0, 
+                        fireProtectionExamFrequency: 5, 
+                        description: 'Handles general HR tasks.', 
+                        risksAndMeasures: [], 
+                        riskLevel: 'Low', 
+                        specialConditions: 'N/A' 
+                    },
+                    { 
+                        id: 'hr-rec', 
+                        name: 'Recruiter', 
+                        medicalExamFrequency: 0, 
+                        fireProtectionExamFrequency: 5, 
+                        description: 'Recruits new employees.', 
+                        risksAndMeasures: [], 
+                        riskLevel: 'Low', 
+                        specialConditions: 'N/A' 
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        name: 'Maintenance',
+        positions: [
+            { 
+                id: 'maint-sup', 
+                name: 'Maintenance Supervisor', 
+                medicalExamFrequency: 3, 
+                fireProtectionExamFrequency: 1, 
+                description: 'Supervises maintenance staff.', 
+                risksAndMeasures: [], 
+                riskLevel: 'Medium', 
+                specialConditions: '',
+                subPositions: [
+                    { 
+                        id: 'maint-tech', 
+                        name: 'Maintenance Technician', 
+                        medicalExamFrequency: 2, 
+                        fireProtectionExamFrequency: 1, 
+                        description: 'Repairs and maintains machinery and mechanical equipment.', 
+                        risksAndMeasures: [{ id: 'rm12', risk: 'Electrical shock', measure: 'Lockout/Tagout procedures' }], 
+                        riskLevel: 'High', 
+                        specialConditions: '' 
+                    },
+                    { 
+                        id: 'prod-weld', 
+                        name: 'Welder',
+                        medicalExamFrequency: 1.5,
+                        fireProtectionExamFrequency: 1,
+                        description: 'Uses hand-welding or flame-cutting equipment to weld or join metal components.',
+                        risksAndMeasures: [
+                            { id: 'rm7', risk: 'UV radiation exposure', measure: 'Use of welding helmets and protective clothing' },
+                            { id: 'rm8', risk: 'Inhalation of metal fumes', measure: 'Use of fume extractors' }
+                        ],
+                        riskLevel: 'High',
+                        specialConditions: 'Requires vision test every 2 years.'
+                    }
+                ]
+            }
+        ]
+    },
+    {
         name: 'Production',
         positions: [
             { 
@@ -96,108 +235,6 @@ export let departments: Department[] = [
         ]
     },
     {
-        name: 'Maintenance',
-        positions: [
-            { 
-                id: 'maint-sup', 
-                name: 'Maintenance Supervisor', 
-                medicalExamFrequency: 3, 
-                fireProtectionExamFrequency: 1, 
-                description: 'Supervises maintenance staff.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Medium', 
-                specialConditions: '',
-                subPositions: [
-                    { 
-                        id: 'maint-tech', 
-                        name: 'Maintenance Technician', 
-                        medicalExamFrequency: 2, 
-                        fireProtectionExamFrequency: 1, 
-                        description: 'Repairs and maintains machinery and mechanical equipment.', 
-                        risksAndMeasures: [{ id: 'rm12', risk: 'Electrical shock', measure: 'Lockout/Tagout procedures' }], 
-                        riskLevel: 'High', 
-                        specialConditions: '' 
-                    },
-                    { 
-                        id: 'prod-weld', 
-                        name: 'Welder',
-                        medicalExamFrequency: 1.5,
-                        fireProtectionExamFrequency: 1,
-                        description: 'Uses hand-welding or flame-cutting equipment to weld or join metal components.',
-                        risksAndMeasures: [
-                            { id: 'rm7', risk: 'UV radiation exposure', measure: 'Use of welding helmets and protective clothing' },
-                            { id: 'rm8', risk: 'Inhalation of metal fumes', measure: 'Use of fume extractors' }
-                        ],
-                        riskLevel: 'High',
-                        specialConditions: 'Requires vision test every 2 years.'
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        name: 'Safety',
-        positions: [
-            { 
-                id: 'safe-man', 
-                name: 'EHS Manager', 
-                medicalExamFrequency: 5, 
-                fireProtectionExamFrequency: 1, 
-                description: 'Manages environmental, health, and safety programs.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Low', 
-                specialConditions: '',
-                subPositions: [
-                    { 
-                        id: 'safe-coord', 
-                        name: 'Safety Coordinator', 
-                        medicalExamFrequency: 5, 
-                        fireProtectionExamFrequency: 1, 
-                        description: 'Coordinates safety programs.', 
-                        risksAndMeasures: [], 
-                        riskLevel: 'Low', 
-                        specialConditions: '' 
-                    }
-                ] 
-            }
-        ]
-    },
-    {
-        name: 'Engineering',
-        positions: [
-            { 
-                id: 'eng-mech', 
-                name: 'Mechanical Engineer', 
-                medicalExamFrequency: 5, 
-                fireProtectionExamFrequency: 3, 
-                description: 'Designs mechanical systems.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Low', 
-                specialConditions: '' 
-            },
-            { 
-                id: 'eng-elec', 
-                name: 'Electrical Engineer', 
-                medicalExamFrequency: 5, 
-                fireProtectionExamFrequency: 3, 
-                description: 'Designs electrical systems.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Low', 
-                specialConditions: '' 
-            },
-            { 
-                id: 'eng-robot', 
-                name: 'Robotics Engineer', 
-                medicalExamFrequency: 5, 
-                fireProtectionExamFrequency: 3, 
-                description: 'Designs and develops robotic systems.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Low', 
-                specialConditions: '' 
-            }
-        ]
-    },
-    {
         name: 'Supply Chain',
         positions: [
             { 
@@ -213,49 +250,11 @@ export let departments: Department[] = [
                     { 
                         id: 'sc-ware', 
                         name: 'Warehouse Associate', 
-                        medicalExamFrequency: 4, 
-                        fireProtectionExamFrequency: 2, 
+                        medicalExamFrequency: 4,                         fireProtectionExamFrequency: 2, 
                         description: 'Works in the warehouse.', 
                         risksAndMeasures: [{id: 'rm13', risk: 'Falling objects', measure: 'Hard hat usage'}], 
                         riskLevel: 'Medium', 
                         specialConditions: '' 
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        name: 'Human Resources',
-        positions: [
-            { 
-                id: 'hr-bp', 
-                name: 'HR Business Partner', 
-                medicalExamFrequency: 0, 
-                fireProtectionExamFrequency: 5, 
-                description: 'Provides HR partnership.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Low', 
-                specialConditions: 'N/A',
-                subPositions: [
-                    { 
-                        id: 'hr-gen', 
-                        name: 'HR Generalist', 
-                        medicalExamFrequency: 0, 
-                        fireProtectionExamFrequency: 5, 
-                        description: 'Handles general HR tasks.', 
-                        risksAndMeasures: [], 
-                        riskLevel: 'Low', 
-                        specialConditions: 'N/A' 
-                    },
-                    { 
-                        id: 'hr-rec', 
-                        name: 'Recruiter', 
-                        medicalExamFrequency: 0, 
-                        fireProtectionExamFrequency: 5, 
-                        description: 'Recruits new employees.', 
-                        risksAndMeasures: [], 
-                        riskLevel: 'Low', 
-                        specialConditions: 'N/A' 
                     }
                 ]
             }
@@ -267,7 +266,7 @@ export let employees: Employee[] = [
   { id: '1', employeeId: 'E1001', firstName: 'John', lastName: 'Doe', gender: 'Male', dateOfBirth: '1985-05-15', socialSecurityNumber: '123-456-7890', residence: '123 Main St', municipality: 'Anytown', profession: 'Mechanic', employmentDate: '2015-03-01', position: 'Assembly Line Worker', department: 'Production', email: 'john.doe@example.com', certifications: ['Forklift Operation', 'Hazardous Materials Handling'], status: 'Active' },
   { id: '2', employeeId: 'E1002', firstName: 'Jane', lastName: 'Smith', gender: 'Female', dateOfBirth: '1990-08-22', socialSecurityNumber: '234-567-8901', residence: '456 Oak Ave', municipality: 'Otherville', profession: 'Engineer', employmentDate: '2018-07-15', position: 'Quality Control Inspector', department: 'Quality Assurance', email: 'jane.smith@example.com', certifications: ['ISO 9001 Auditing', 'Six Sigma Green Belt'], status: 'Active' },
   { id: '3', employeeId: 'E1003', firstName: 'Mike', lastName: 'Johnson', gender: 'Male', dateOfBirth: '1982-11-30', socialSecurityNumber: '345-678-9012', residence: '789 Pine Ln', municipality: 'Somewhere', profession: 'Electrician', employmentDate: '2012-01-10', position: 'Maintenance Technician', department: 'Maintenance', email: 'mike.johnson@example.com', certifications: ['Electrical Safety', 'Lockout/Tagout Procedures'], status: 'Active' },
-  { id: '4', employeeId: 'E1004', firstName: 'Emily', lastName: 'Davis', gender: 'Female', dateOfBirth: '1988-02-20', socialSecurityNumber: '456-789-0123', residence: '101 Maple Dr', municipality: 'Anytown', profession: 'Safety Inspector', employmentDate: '2020-09-01', position: 'EHS Manager', department: 'Safety', email: 'emily.davis@example.com', certifications: ['OSHA 30-Hour', 'Certified Safety Professional'], status: 'Active' },
+  { id: '4', employeeId: 'E1004', firstName: 'Emily', lastName: 'Davis', gender: 'Female', dateOfBirth: '1988-02-20', socialSecurityNumber: '456-789-0123', residence: '101 Maple Dr', municipality: 'Anytown', profession: 'Safety Inspector', employmentDate: '2020-09-01', position: 'EHS Manager', department: 'EHS', email: 'emily.davis@example.com', certifications: ['OSHA 30-Hour', 'Certified Safety Professional'], status: 'Active' },
   { id: '5', employeeId: 'E1005', firstName: 'Chris', lastName: 'Brown', gender: 'Male', dateOfBirth: '1992-04-12', socialSecurityNumber: '567-890-1234', residence: '212 Birch Rd', municipality: 'Otherville', profession: 'Robotics Specialist', employmentDate: '2019-11-20', position: 'Robotics Engineer', department: 'Engineering', email: 'chris.brown@example.com', certifications: ['Robot Safety Standards', 'Advanced PLC Programming'], status: 'On Leave' },
   { id: '6', employeeId: 'E1006', firstName: 'Sarah', lastName: 'Wilson', gender: 'Female', dateOfBirth: '1995-09-05', socialSecurityNumber: '678-901-2345', residence: '333 Cedar Ct', municipality: 'Somewhere', profession: 'Painter', employmentDate: '2021-02-18', position: 'Paint Shop Operator', department: 'Production', email: 'sarah.wilson@example.com', certifications: ['Respirator Fit Testing', 'Chemical Safety'], status: 'Active' },
   { id: '7', employeeId: 'E1007', firstName: 'David', lastName: 'Lee', gender: 'Male', dateOfBirth: '1989-12-10', socialSecurityNumber: '789-012-3456', residence: '444 Willow Way', municipality: 'Anytown', profession: 'Logistics Expert', employmentDate: '2017-05-25', terminationDate: '2023-10-31', position: 'Logistics Coordinator', department: 'Supply Chain', email: 'david.lee@example.com', certifications: ['Forklift Operation'], status: 'Terminated' },
