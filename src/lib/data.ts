@@ -4,7 +4,7 @@ import { subDays, addDays, format } from 'date-fns';
 
 const today = new Date();
 
-export const departments: Department[] = [
+export let departments: Department[] = [
     {
         name: 'Production',
         positions: ['Assembly Line Worker', 'Paint Shop Operator', 'Production Supervisor', 'Welder']
@@ -35,7 +35,7 @@ export const departments: Department[] = [
     }
 ];
 
-export const employees: Employee[] = [
+export let employees: Employee[] = [
   { id: '1', employeeId: 'E1001', firstName: 'John', lastName: 'Doe', gender: 'Male', dateOfBirth: '1985-05-15', socialSecurityNumber: '123-456-7890', residence: '123 Main St', municipality: 'Anytown', profession: 'Mechanic', employmentDate: '2015-03-01', position: 'Assembly Line Worker', department: 'Production', email: 'john.doe@example.com', certifications: ['Forklift Operation', 'Hazardous Materials Handling'], status: 'Active' },
   { id: '2', employeeId: 'E1002', firstName: 'Jane', lastName: 'Smith', gender: 'Female', dateOfBirth: '1990-08-22', socialSecurityNumber: '234-567-8901', residence: '456 Oak Ave', municipality: 'Otherville', profession: 'Engineer', employmentDate: '2018-07-15', position: 'Quality Control Inspector', department: 'Quality Assurance', email: 'jane.smith@example.com', certifications: ['ISO 9001 Auditing', 'Six Sigma Green Belt'], status: 'Active' },
   { id: '3', employeeId: 'E1003', firstName: 'Mike', lastName: 'Johnson', gender: 'Male', dateOfBirth: '1982-11-30', socialSecurityNumber: '345-678-9012', residence: '789 Pine Ln', municipality: 'Somewhere', profession: 'Electrician', employmentDate: '2012-01-10', position: 'Maintenance Technician', department: 'Maintenance', email: 'mike.johnson@example.com', certifications: ['Electrical Safety', 'Lockout/Tagout Procedures'], status: 'Active' },
@@ -46,7 +46,7 @@ export const employees: Employee[] = [
   { id: '8', employeeId: 'E1008', firstName: 'Jessica', lastName: 'Miller', gender: 'Female', dateOfBirth: '1993-07-18', socialSecurityNumber: '890-123-4567', residence: '555 Spruce St', municipality: 'Otherville', profession: 'HR Generalist', employmentDate: '2022-08-01', position: 'HR Business Partner', department: 'Human Resources', email: 'jessica.miller@example.com', certifications: [], status: 'Active' },
 ];
 
-export const trainingModules: TrainingModule[] = [
+export let trainingModules: TrainingModule[] = [
   // John Doe
   { id: 't1', employeeId: '1', name: 'Safety Harness Training', dueDate: format(subDays(today, 10), 'yyyy-MM-dd'), status: 'Overdue', score: undefined },
   { id: 't2', employeeId: '1', name: 'Ergonomics in Assembly', dueDate: format(addDays(today, 5), 'yyyy-MM-dd'), status: 'In Progress' },
@@ -66,7 +66,7 @@ export const trainingModules: TrainingModule[] = [
   { id: 't11', employeeId: '6', name: 'Personal Protective Equipment (PPE)', dueDate: format(subDays(today, 45), 'yyyy-MM-dd'), status: 'Completed', completionDate: format(subDays(today, 45), 'yyyy-MM-dd'), score: 90 },
 ];
 
-export const safetyIncidents: SafetyIncident[] = [
+export let safetyIncidents: SafetyIncident[] = [
   { id: 's1', employeeId: '1', date: format(subDays(today, 40), 'yyyy-MM-dd'), description: 'Minor slip on wet floor, no injury.', type: 'Near Miss' },
   { id: 's2', employeeId: '6', date: format(subDays(today, 90), 'yyyy-MM-dd'), description: 'Incorrect chemical mixture led to paint batch disposal.', type: 'Property Damage' },
   { id: 's3', employeeId: '3', date: format(subDays(today, 120), 'yyyy-MM-dd'), description: 'Minor cut on hand from exposed wiring.', type: 'Injury' },
@@ -86,6 +86,20 @@ export let ppeEquipment: string[] = [
 export function getEmployee(id: string) {
   return employees.find(e => e.id === id);
 }
+
+export function getEmployees() {
+    return employees;
+}
+
+export function updateEmployee(updatedEmployee: Employee) {
+    const index = employees.findIndex(e => e.id === updatedEmployee.id);
+    if (index === -1) {
+        return { success: false, error: "Employee not found." };
+    }
+    employees[index] = updatedEmployee;
+    return { success: true };
+}
+
 
 export function getTrainingsForEmployee(employeeId: string) {
   return trainingModules.filter(t => t.employeeId === employeeId);
@@ -159,5 +173,95 @@ export function removePpeEquipment(equipmentName: string) {
         return { success: false, error: `Cannot remove "${equipmentName}" as it is currently checked out.`};
     }
     ppeEquipment = ppeEquipment.filter(item => item.toLowerCase() !== equipmentName.toLowerCase());
+    return { success: true };
+}
+
+export function addDepartment(departmentName: string) {
+    const trimmedName = departmentName.trim();
+    if (trimmedName === '') {
+        return { success: false, error: 'Department name cannot be empty.' };
+    }
+    if (departments.some(d => d.name.toLowerCase() === trimmedName.toLowerCase())) {
+        return { success: false, error: `Department "${trimmedName}" already exists.` };
+    }
+    departments = [...departments, { name: trimmedName, positions: [] }].sort((a, b) => a.name.localeCompare(b.name));
+    return { success: true };
+}
+
+export function editDepartment(oldName: string, newName: string) {
+    const trimmedNewName = newName.trim();
+    if (trimmedNewName === '') {
+        return { success: false, error: 'Department name cannot be empty.' };
+    }
+    const index = departments.findIndex(d => d.name.toLowerCase() === oldName.toLowerCase());
+    if (index === -1) {
+        return { success: false, error: `Department "${oldName}" not found.` };
+    }
+    if (departments.some(d => d.name.toLowerCase() === trimmedNewName.toLowerCase() && d.name.toLowerCase() !== oldName.toLowerCase())) {
+        return { success: false, error: `Department "${trimmedNewName}" already exists.` };
+    }
+    departments[index].name = trimmedNewName;
+    departments.sort((a, b) => a.name.localeCompare(b.name));
+    // Also update employees
+    employees = employees.map(e => e.department === oldName ? { ...e, department: trimmedNewName } : e);
+    return { success: true };
+}
+
+export function removeDepartment(departmentName: string) {
+    if (employees.some(e => e.department === departmentName)) {
+        return { success: false, error: `Cannot remove "${departmentName}" as it is assigned to one or more employees.`};
+    }
+    departments = departments.filter(d => d.name.toLowerCase() !== departmentName.toLowerCase());
+    return { success: true };
+}
+
+export function addPosition(departmentName: string, positionName: string) {
+    const trimmedName = positionName.trim();
+    if (trimmedName === '') {
+        return { success: false, error: 'Position name cannot be empty.' };
+    }
+    const department = departments.find(d => d.name === departmentName);
+    if (!department) {
+        return { success: false, error: `Department "${departmentName}" not found.` };
+    }
+    if (department.positions.some(p => p.toLowerCase() === trimmedName.toLowerCase())) {
+        return { success: false, error: `Position "${trimmedName}" already exists in ${departmentName}.` };
+    }
+    department.positions = [...department.positions, trimmedName].sort();
+    return { success: true };
+}
+
+export function editPosition(departmentName: string, oldName: string, newName: string) {
+    const trimmedNewName = newName.trim();
+    if (trimmedNewName === '') {
+        return { success: false, error: 'Position name cannot be empty.' };
+    }
+    const department = departments.find(d => d.name === departmentName);
+    if (!department) {
+        return { success: false, error: `Department "${departmentName}" not found.` };
+    }
+    const index = department.positions.findIndex(p => p.toLowerCase() === oldName.toLowerCase());
+    if (index === -1) {
+        return { success: false, error: `Position "${oldName}" not found in ${departmentName}.` };
+    }
+    if (department.positions.some(p => p.toLowerCase() === trimmedNewName.toLowerCase() && p.toLowerCase() !== oldName.toLowerCase())) {
+        return { success: false, error: `Position "${trimmedNewName}" already exists in ${departmentName}.` };
+    }
+    department.positions[index] = trimmedNewName;
+    department.positions.sort();
+    // Also update employees
+    employees = employees.map(e => (e.department === departmentName && e.position === oldName) ? { ...e, position: trimmedNewName } : e);
+    return { success: true };
+}
+
+export function removePosition(departmentName: string, positionName: string) {
+    if (employees.some(e => e.department === departmentName && e.position === positionName)) {
+        return { success: false, error: `Cannot remove "${positionName}" as it is assigned to one or more employees.`};
+    }
+    const department = departments.find(d => d.name === departmentName);
+    if (!department) {
+        return { success: false, error: `Department "${departmentName}" not found.` };
+    }
+    department.positions = department.positions.filter(p => p.toLowerCase() !== positionName.toLowerCase());
     return { success: true };
 }

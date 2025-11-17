@@ -36,6 +36,7 @@ import {
 import { TrainingModule } from "@/lib/types";
 import { differenceInDays, parseISO } from "date-fns";
 import RemediationDialog from "./components/remediation-dialog";
+import { Button } from "@/components/ui/button";
 
 function getStatusIcon(status: TrainingModule['status']) {
   switch (status) {
@@ -103,19 +104,28 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5" />
-              <span>Certifications</span>
-            </CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="space-y-1.5">
+                <CardTitle className="flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5" />
+                  <span>Certifications</span>
+                </CardTitle>
+            </div>
+            <Button size="sm" variant="outline">Add</Button>
           </CardHeader>
           <CardContent>
             {employee.certifications.length > 0 ? (
               <ul className="space-y-2 text-sm">
                 {employee.certifications.map((cert) => (
-                  <li key={cert} className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-primary" />
-                    <span>{cert}</span>
+                  <li key={cert} className="flex items-center justify-between gap-2 group">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-primary" />
+                      <span>{cert}</span>
+                    </div>
+                     <div className="opacity-0 group-hover:opacity-100 space-x-1">
+                        <Button variant="ghost" size="icon" className="h-6 w-6"><FileText className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive"><XCircle className="h-4 w-4" /></Button>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -128,8 +138,9 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
 
       <div className="lg:col-span-2 space-y-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Assigned Trainings</CardTitle>
+            <Button size="sm" variant="outline">Add</Button>
           </CardHeader>
           <CardContent>
             <Table>
@@ -165,7 +176,7 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
                             completionStatus={training.status}
                           />
                         ) : (
-                          <span className="text-xs text-muted-foreground">No action needed</span>
+                           <Button variant="ghost" size="sm">View</Button>
                         )}
                       </TableCell>
                     </TableRow>
@@ -176,20 +187,25 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Safety Record</CardTitle>
+            <Button size="sm" variant="outline">Add</Button>
           </CardHeader>
           <CardContent>
           {incidents.length > 0 ? (
             <ul className="space-y-4">
               {incidents.map((incident) => (
-                <li key={incident.id} className="flex items-start gap-4">
+                <li key={incident.id} className="flex items-start gap-4 group">
                   <div className="flex-shrink-0 mt-1">
                     <Badge variant={incident.type === 'Injury' ? 'destructive' : 'secondary'}>{incident.type}</Badge>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium">{incident.date}</p>
                     <p className="text-sm text-muted-foreground">{incident.description}</p>
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 space-x-1">
+                    <Button variant="ghost" size="icon" className="h-6 w-6"><FileText className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive"><XCircle className="h-4 w-4" /></Button>
                   </div>
                 </li>
               ))}
