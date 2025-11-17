@@ -1,14 +1,19 @@
-import { getEmployees, getPpeCheckouts, getPpeEquipment, getPpeStock } from "@/lib/data";
+
+import { getEmployees, getPpeCheckouts, getPpeEquipment } from "@/lib/data";
 import { columns } from "./components/checkout-columns";
 import { CheckoutDataTable } from "./components/checkout-data-table";
 import { AddPpeCheckoutForm } from "./components/add-ppe-checkout-form";
-import { ManagePpeEquipment } from "./components/manage-ppe-equipment";
+import { StockLevels } from "./inventory/components/stock-levels";
 
 export default async function PpePage() {
   const checkouts = getPpeCheckouts();
   const employees = getEmployees();
   const equipment = getPpeEquipment();
-  const stock = getPpeStock();
+  
+  const stock = equipment.reduce((acc, item) => {
+    acc[item.id] = item.stock;
+    return acc;
+  }, {} as Record<string, number>);
 
   const checkoutData = checkouts.map(checkout => {
     const employee = employees.find(e => e.id === checkout.employeeId);
@@ -23,14 +28,10 @@ export default async function PpePage() {
   });
 
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
-      <div className="lg:col-span-2 space-y-6">
-        <AddPpeCheckoutForm employees={employees} ppeEquipment={equipment} ppeStock={stock} />
-        <CheckoutDataTable columns={columns} data={checkoutData} />
-      </div>
-      <div className="lg:col-span-1 space-y-6">
-        <ManagePpeEquipment equipment={equipment} />
-      </div>
+    <div className="space-y-6">
+      <StockLevels equipment={equipment} />
+      <AddPpeCheckoutForm employees={employees} ppeEquipment={equipment} ppeStock={stock} />
+      <CheckoutDataTable columns={columns} data={checkoutData} />
     </div>
   );
 }
