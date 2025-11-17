@@ -1,7 +1,8 @@
 
 "use server";
 
-import { addPpeEquipment as addPpeEquipmentData, editPpeEquipment as editPpeEquipmentData, removePpeEquipment as removePpeEquipmentData } from "@/lib/data";
+import { addPpeEquipment as addPpeEquipmentData, editPpeEquipment as editPpeEquipmentData, removePpeEquipment as removePpeEquipmentData, updatePpeCheckout as updatePpeCheckoutData } from "@/lib/data";
+import { PPECheckout } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 export async function addPpeEquipment(equipmentName: string) {
@@ -46,5 +47,20 @@ export async function editPpeEquipment(oldName: string, newName: string) {
     } catch (error) {
       console.error("Error removing PPE equipment:", error);
       return { success: false, error: "Failed to remove equipment." };
+    }
+  }
+
+  export async function updatePpeCheckout(checkout: PPECheckout) {
+    try {
+      const result = updatePpeCheckoutData(checkout);
+      if (result.success) {
+        revalidatePath("/ppe");
+        return { success: true };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      console.error("Error updating PPE checkout:", error);
+      return { success: false, error: "Failed to update checkout record." };
     }
   }

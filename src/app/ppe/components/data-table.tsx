@@ -64,10 +64,10 @@ export function DataTable<TData, TValue>({
       <CardContent>
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter by employee name..."
-            value={(table.getColumn("employeeName")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter by employee ID..."
+            value={(table.getColumn("employeeId")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("employeeName")?.setFilterValue(event.target.value)
+              table.getColumn("employeeId")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />

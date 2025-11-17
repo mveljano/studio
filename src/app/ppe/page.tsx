@@ -10,6 +10,7 @@ export default async function PpePage() {
     const employee = employees.find(e => e.id === checkout.employeeId);
     return {
       ...checkout,
+      employeeId: employee ? employee.employeeId : 'Unknown',
       employeeName: employee ? `${employee.firstName} ${employee.lastName}` : 'Unknown',
     };
   });

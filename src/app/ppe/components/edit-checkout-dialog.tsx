@@ -1,0 +1,157 @@
+
+"use client";
+
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { PPECheckout } from "@/lib/types";
+import { updatePpeCheckout } from "../actions";
+
+const formSchema = z.object({
+  size: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+type EditCheckoutDialogProps = {
+  checkout: PPECheckout & { employeeName: string };
+};
+
+export function EditCheckoutDialog({ checkout }: EditCheckoutDialogProps) {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      size: checkout.size || "",
+      notes: checkout.notes || "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    
+    const employee = {
+        id: checkout.employeeId,
+    }
+
+    const updatedRecord: PPECheckout = {
+      ...checkout,
+      ...values,
+      employeeId: employee.id,
+    };
+    
+    const result = await updatePpeCheckout(updatedRecord);
+
+    if (result.success) {
+      toast({
+        title: "Success!",
+        description: "Checkout record has been updated.",
+      });
+      setOpen(false);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: result.error || "Could not update the record.",
+      });
+    }
+    setLoading(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            Edit Record
+        </div>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Checkout Record</DialogTitle>
+          <DialogDescription>
+            Update the details for this PPE checkout record.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4 text-sm">
+            <div className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="text-right">Employee</FormLabel>
+                <div className="col-span-3 font-medium">{checkout.employeeName} ({checkout.employeeId})</div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="text-right">Equipment</FormLabel>
+                <div className="col-span-3 font-medium">{checkout.equipment}</div>
+            </div>
+             <div className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="text-right">Date</FormLabel>
+                <div className="col-span-3 font-medium">{checkout.checkoutDate}</div>
+            </div>
+        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="size"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right">Size</FormLabel>
+                  <FormControl className="col-span-3">
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage className="col-span-4" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right">Notes</FormLabel>
+                  <FormControl className="col-span-3">
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage className="col-span-4" />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" variant="ghost">Cancel</Button>
+                </DialogClose>
+                <Button type="submit" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Save Changes
+                </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

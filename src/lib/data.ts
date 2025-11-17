@@ -73,6 +73,15 @@ export function addPpeCheckout(checkout: Omit<PPECheckout, 'id'>) {
   return newCheckout;
 }
 
+export function updatePpeCheckout(updatedCheckout: PPECheckout) {
+    const index = ppeCheckouts.findIndex(c => c.id === updatedCheckout.id);
+    if (index === -1) {
+        return { success: false, error: "Checkout record not found." };
+    }
+    ppeCheckouts[index] = updatedCheckout;
+    return { success: true };
+}
+
 export function addPpeEquipment(equipmentName: string) {
     const trimmedName = equipmentName.trim();
     if (trimmedName === '') {
