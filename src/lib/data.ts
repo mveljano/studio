@@ -1,6 +1,6 @@
 
 
-import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department, Position } from '@/lib/types';
+import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department, Position, RiskAndMeasure } from '@/lib/types';
 import { subDays, addDays, format } from 'date-fns';
 
 const today = new Date();
@@ -108,37 +108,37 @@ export let departments: Department[] = [
     {
         name: 'Maintenance',
         positions: [
-            { 
-                id: 'maint-sup', 
-                name: 'Maintenance Supervisor', 
-                medicalExamFrequency: 3, 
-                fireProtectionExamFrequency: 1, 
-                description: 'Supervises maintenance staff.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Medium', 
+            {
+                id: 'maint-sup',
+                name: 'Maintenance Supervisor',
+                description: 'Supervises maintenance staff.',
+                medicalExamFrequency: 3,
+                fireProtectionExamFrequency: 1,
+                riskLevel: 'Medium',
+                risksAndMeasures: [],
                 specialConditions: '',
                 subPositions: [
-                    { 
-                        id: 'maint-tech', 
-                        name: 'Maintenance Technician', 
-                        medicalExamFrequency: 2, 
-                        fireProtectionExamFrequency: 1, 
-                        description: 'Repairs and maintains machinery and mechanical equipment.', 
-                        risksAndMeasures: [{ id: 'rm12', risk: 'Electrical shock', measure: 'Lockout/Tagout procedures' }], 
-                        riskLevel: 'High', 
-                        specialConditions: '' 
+                    {
+                        id: 'maint-tech',
+                        name: 'Maintenance Technician',
+                        description: 'Repairs and maintains machinery and mechanical equipment.',
+                        medicalExamFrequency: 2,
+                        fireProtectionExamFrequency: 1,
+                        riskLevel: 'High',
+                        risksAndMeasures: [{ id: 'rm12', risk: 'Electrical shock', measure: 'Lockout/Tagout procedures' }],
+                        specialConditions: ''
                     },
-                    { 
-                        id: 'prod-weld', 
+                    {
+                        id: 'prod-weld',
                         name: 'Welder',
+                        description: 'Uses hand-welding or flame-cutting equipment to weld or join metal components.',
                         medicalExamFrequency: 1.5,
                         fireProtectionExamFrequency: 1,
-                        description: 'Uses hand-welding or flame-cutting equipment to weld or join metal components.',
+                        riskLevel: 'High',
                         risksAndMeasures: [
                             { id: 'rm7', risk: 'UV radiation exposure', measure: 'Use of welding helmets and protective clothing' },
                             { id: 'rm8', risk: 'Inhalation of metal fumes', measure: 'Use of fume extractors' }
                         ],
-                        riskLevel: 'High',
                         specialConditions: 'Requires vision test every 2 years.'
                     }
                 ]
@@ -148,45 +148,45 @@ export let departments: Department[] = [
     {
         name: 'Production',
         positions: [
-            { 
-                id: 'prod-sup', 
+            {
+                id: 'prod-sup',
                 name: 'Production Supervisor',
+                description: 'Supervises and coordinates the activities of production and operating workers.',
                 medicalExamFrequency: 2,
                 fireProtectionExamFrequency: 1,
-                description: 'Supervises and coordinates the activities of production and operating workers.',
+                riskLevel: 'Medium',
                 risksAndMeasures: [
                     { id: 'rm1', risk: 'High noise levels', measure: 'Use of ear protection' },
                     { id: 'rm2', risk: 'Repetitive strain injury', measure: 'Regular breaks and ergonomic training' }
                 ],
-                riskLevel: 'Medium',
                 specialConditions: 'Must be forklift certified.',
                 subPositions: [
-                    { 
-                        id: 'prod-asm', 
+                    {
+                        id: 'prod-asm',
                         name: 'Assembly Line Worker',
+                        description: 'Assembles parts or units, and positions, aligns, and fastens units to assemblies, subassemblies, or frames.',
                         medicalExamFrequency: 3,
                         fireProtectionExamFrequency: 2,
-                        description: 'Assembles parts or units, and positions, aligns, and fastens units to assemblies, subassemblies, or frames.',
+                        riskLevel: 'Medium',
                         risksAndMeasures: [
                             { id: 'rm3', risk: 'Repetitive motion', measure: 'Job rotation' },
                             { id: 'rm4', risk: 'Sharp objects', measure: 'Use of protective gloves' }
                         ],
-                        riskLevel: 'Medium',
                         specialConditions: ''
                     },
-                    { 
-                        id: 'prod-paint', 
+                    {
+                        id: 'prod-paint',
                         name: 'Paint Shop Operator',
+                        description: 'Operates or tends machines to coat or paint any of a wide variety of products.',
                         medicalExamFrequency: 1,
                         fireProtectionExamFrequency: 1,
-                        description: 'Operates or tends machines to coat or paint any of a wide variety of products.',
+                        riskLevel: 'High',
                         risksAndMeasures: [
                             { id: 'rm5', risk: 'Inhalation of fumes', measure: 'Use of respirators and proper ventilation' },
                             { id: 'rm6', risk: 'Skin contact with chemicals', measure: 'Use of chemical-resistant gloves and suits' }
                         ],
-                        riskLevel: 'High',
                         specialConditions: 'Requires annual respiratory fit test.'
-                    }
+                    },
                 ]
             }
         ]
@@ -442,29 +442,37 @@ export function removeDepartment(departmentName: string) {
     return { success: true };
 }
 
-function findPositionAndParent(departmentName: string, positionId: string): { position: Position | null, parent: Position[] | Department['positions'] | null } {
-    const department = departments.find(d => d.name === departmentName);
-    if (!department) return { position: null, parent: null };
-
-    const search = (positions: Position[]): { position: Position | null, parent: Position[] | null } => {
-        for (const pos of positions) {
-            if (pos.id === positionId) {
-                return { position: pos, parent: positions };
-            }
-            if (pos.subPositions) {
-                const found = search(pos.subPositions);
-                if (found.position) return found;
+// Recursive function to find a position by ID in a list of positions
+function findPositionInArray(positions: Position[], positionId: string): { position: Position | null, parentArray: Position[] | null, index: number } {
+    for (let i = 0; i < positions.length; i++) {
+        const position = positions[i];
+        if (position.id === positionId) {
+            return { position, parentArray: positions, index: i };
+        }
+        if (position.subPositions) {
+            const found = findPositionInArray(position.subPositions, positionId);
+            if (found.position) {
+                return found;
             }
         }
-        return { position: null, parent: null };
-    };
+    }
+    return { position: null, parentArray: null, index: -1 };
+}
 
-    const { position, parent } = search(department.positions);
-    return { position, parent: parent || department.positions };
+// Find a position and its parent array within a department
+function findPositionAndParent(departmentName: string, positionId: string): { position: Position | null, parentArray: Position[] | null, index: number } {
+    const department = departments.find(d => d.name === departmentName);
+    if (!department) return { position: null, parentArray: null, index: -1 };
+    return findPositionInArray(department.positions, positionId);
+}
+
+// Recursive function to check for name collisions
+function isNameDuplicate(positions: Position[], newName: string, excludedId?: string): boolean {
+    return positions.some(p => p.name.toLowerCase() === newName.toLowerCase() && p.id !== excludedId);
 }
 
 
-export function addPosition(departmentName: string, positionData: Omit<Position, 'id' | 'subPositions'>, parentId?: string) {
+export function addPosition(departmentName: string, positionData: Omit<Position, 'id' | 'subPositions'>, parentId?: string | null) {
     const department = departments.find(d => d.name === departmentName);
     if (!department) {
         return { success: false, error: `Department "${departmentName}" not found.` };
@@ -473,6 +481,7 @@ export function addPosition(departmentName: string, positionData: Omit<Position,
     const newPosition: Position = {
         ...positionData,
         id: `pos-${Date.now()}-${Math.random()}`, // Simple unique ID
+        risksAndMeasures: positionData.risksAndMeasures || [],
         subPositions: []
     };
 
@@ -481,44 +490,57 @@ export function addPosition(departmentName: string, positionData: Omit<Position,
         if (!parentPosition) {
             return { success: false, error: `Parent position with ID "${parentId}" not found.` };
         }
+        if (isNameDuplicate(parentPosition.subPositions || [], newPosition.name)) {
+            return { success: false, error: `A position with the name "${newPosition.name}" already exists here.` };
+        }
         if (!parentPosition.subPositions) {
             parentPosition.subPositions = [];
         }
         parentPosition.subPositions.push(newPosition);
         parentPosition.subPositions.sort((a,b) => a.name.localeCompare(b.name));
     } else {
+        if (isNameDuplicate(department.positions, newPosition.name)) {
+            return { success: false, error: `A position with the name "${newPosition.name}" already exists in this department.` };
+        }
         department.positions.push(newPosition);
         department.positions.sort((a,b) => a.name.localeCompare(b.name));
     }
 
-    return { success: true };
+    return { success: true, position: newPosition };
 }
 
-export function editPosition(departmentName: string, positionId: string, positionData: Partial<Position>) {
-    const { position } = findPositionAndParent(departmentName, positionId);
-    if (!position) {
+export function editPosition(departmentName: string, positionId: string, positionData: Partial<Omit<Position, 'id' | 'subPositions'>>) {
+    const { position, parentArray } = findPositionAndParent(departmentName, positionId);
+
+    if (!position || !parentArray) {
         return { success: false, error: `Position with ID "${positionId}" not found.` };
     }
 
-    // Prevent changing the name to one that already exists at the same level
-    // This is a bit complex with the new structure and might need more robust logic
-    // For now, we'll assume names are unique within the department for simplicity
-
+    const oldName = position.name;
+    
+    // Check for name collision if name is being changed
+    if (positionData.name && positionData.name !== oldName) {
+        if (isNameDuplicate(parentArray, positionData.name, positionId)) {
+            return { success: false, error: `A position with the name "${positionData.name}" already exists at this level.` };
+        }
+    }
+    
     Object.assign(position, positionData);
 
     // Also update employees if the position name changed
-    if (positionData.name) {
-        const oldName = position.name; // This isn't quite right, but it's a simplification
+    if (positionData.name && positionData.name !== oldName) {
         employees = employees.map(e => (e.department === departmentName && e.position === oldName) ? { ...e, position: positionData.name! } : e);
     }
     
-    return { success: true };
+    parentArray.sort((a,b) => a.name.localeCompare(b.name));
+    
+    return { success: true, position };
 }
 
 
 export function removePosition(departmentName: string, positionId: string) {
-    // First, check if any employee is assigned to this position
-    const { position: positionToRemove } = findPositionAndParent(departmentName, positionId);
+    const { position: positionToRemove, parentArray } = findPositionAndParent(departmentName, positionId);
+    
     if (!positionToRemove) {
         return { success: false, error: `Position with ID "${positionId}" not found.` };
     }
@@ -527,12 +549,9 @@ export function removePosition(departmentName: string, positionId: string) {
         return { success: false, error: `Cannot remove "${positionToRemove.name}" as it is assigned to one or more employees.`};
     }
     
-    // If it has sub-positions, prevent deletion
     if (positionToRemove.subPositions && positionToRemove.subPositions.length > 0) {
         return { success: false, error: `Cannot remove "${positionToRemove.name}" as it has sub-positions.`};
     }
-
-    const { parent: parentArray } = findPositionAndParent(departmentName, positionId);
 
     if (!parentArray) {
         return { success: false, error: "Could not find the position's container." };
@@ -546,3 +565,22 @@ export function removePosition(departmentName: string, positionId: string) {
 
     return { success: false, error: "Failed to remove the position." };
 }
+
+export function getAllPositions(departmentName: string): { id: string, name: string, level: number }[] {
+    const department = departments.find(d => d.name === departmentName);
+    if (!department) return [];
+  
+    const positionsList: { id: string, name: string, level: number }[] = [];
+  
+    function traverse(positions: Position[], level: number) {
+      positions.forEach(pos => {
+        positionsList.push({ id: pos.id, name: pos.name, level: level });
+        if (pos.subPositions) {
+          traverse(pos.subPositions, level + 1);
+        }
+      });
+    }
+  
+    traverse(department.positions, 0);
+    return positionsList;
+  }

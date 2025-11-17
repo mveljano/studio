@@ -58,12 +58,12 @@ export type RiskAndMeasure = {
 export type Position = {
     id: string;
     name: string;
+    description: string;
     medicalExamFrequency: number;
     fireProtectionExamFrequency: number;
-    description: string;
-    risksAndMeasures: RiskAndMeasure[];
     riskLevel: 'Low' | 'Medium' | 'High';
     specialConditions: string;
+    risksAndMeasures: RiskAndMeasure[];
     subPositions?: Position[];
 };
 
@@ -71,3 +71,4 @@ export type Department = {
     name: string;
     positions: Position[];
 };
+
