@@ -1,4 +1,5 @@
-import type { Employee, SafetyIncident, TrainingModule } from '@/lib/types';
+
+import type { Employee, SafetyIncident, TrainingModule, PPECheckout } from '@/lib/types';
 import { subDays, addDays, format } from 'date-fns';
 
 const today = new Date();
@@ -40,6 +41,17 @@ export const safetyIncidents: SafetyIncident[] = [
   { id: 's3', employeeId: '3', date: format(subDays(today, 120), 'yyyy-MM-dd'), description: 'Minor cut on hand from exposed wiring.', type: 'Injury' },
 ];
 
+export let ppeCheckouts: PPECheckout[] = [
+  { id: 'ppe1', employeeId: '1', equipment: 'Safety Boots', checkoutDate: format(subDays(today, 60), 'yyyy-MM-dd'), size: '10' },
+  { id: 'ppe2', employeeId: '2', equipment: 'Jacket', checkoutDate: format(subDays(today, 30), 'yyyy-MM-dd'), size: 'M' },
+  { id: 'ppe3', employeeId: '6', equipment: 'Mask', checkoutDate: format(subDays(today, 15), 'yyyy-MM-dd') },
+];
+
+export const ppeEquipment: string[] = [
+  'T-shirt', 'Trousers', 'Safety Boots', 'Jacket', 'Jersey', 'Winter Jacket', 'Winter Shoes',
+  'Locker Keys', 'Office Shirt', 'Long-sleeve Shirt', 'Mask Filters', 'Mask', 'Protective Glasses'
+];
+
 export function getEmployee(id: string) {
   return employees.find(e => e.id === id);
 }
@@ -48,6 +60,15 @@ export function getTrainingsForEmployee(employeeId: string) {
   return trainingModules.filter(t => t.employeeId === employeeId);
 }
 
-export function getIncidentsForEmployee(employeeId: string) {
+export function getIncidentsForEmployee(employeeId:string) {
   return safetyIncidents.filter(i => i.employeeId === employeeId);
+}
+
+export function addPpeCheckout(checkout: Omit<PPECheckout, 'id'>) {
+  const newCheckout: PPECheckout = {
+    id: `ppe${ppeCheckouts.length + 1}`,
+    ...checkout,
+  };
+  ppeCheckouts = [...ppeCheckouts, newCheckout];
+  return newCheckout;
 }

@@ -1,3 +1,4 @@
+
 export type Employee = {
   id: string;
   employeeId: string;
@@ -37,3 +38,12 @@ export type SafetyIncident = {
 };
 
 export type TrainingStatus = 'Completed' | 'In Progress' | 'Overdue' | 'Not Started';
+
+export type PPECheckout = {
+  id: string;
+  employeeId: string;
+  equipment: string;
+  checkoutDate: string;
+  size?: string;
+  notes?: string;
+};

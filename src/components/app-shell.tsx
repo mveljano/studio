@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -30,6 +31,7 @@ import {
   LogOut,
   Settings,
   User,
+  Shield,
 } from "lucide-react";
 import { Logo } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -47,6 +49,11 @@ const navItems = [
     href: "/employees",
     icon: Users,
     label: "Employees",
+  },
+  {
+    href: "/ppe",
+    icon: Shield,
+    label: "PPE",
   },
 ];
 
