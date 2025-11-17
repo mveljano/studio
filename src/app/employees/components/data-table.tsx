@@ -26,21 +26,22 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Employee } from "@/lib/types"
-import { EditEmployeeDialog } from "./edit-employee-dialog"
+import { getColumns, EmployeeColumnActions } from "./columns"
 
 interface DataTableProps<TData extends { id: string }, TValue> {
-  columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onEdit: (employee: Employee) => void;
 }
 
 export function DataTable<TData extends { id: string }, TValue>({
-  columns,
   data,
+  onEdit,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [editingEmployee, setEditingEmployee] = React.useState<Employee | null>(null);
   const router = useRouter();
+
+  const columns = React.useMemo(() => getColumns({ onEdit: onEdit as (employee: Employee) => void }), [onEdit]);
 
   const table = useReactTable({
     data,
@@ -58,7 +59,6 @@ export function DataTable<TData extends { id: string }, TValue>({
   })
 
   return (
-    <>
     <Card>
       <CardContent className="p-4">
         <div className="flex items-center py-4">
@@ -142,13 +142,5 @@ export function DataTable<TData extends { id: string }, TValue>({
         </div>
       </CardContent>
     </Card>
-     {editingEmployee && (
-        <EditEmployeeDialog
-          employee={editingEmployee}
-          isOpen={!!editingEmployee}
-          onClose={() => setEditingEmployee(null)}
-        />
-      )}
-    </>
   )
 }

@@ -1,23 +1,23 @@
+
+"use client"
+
+import { useState } from "react";
 import { getEmployees } from "@/lib/data"
-import { getColumns } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { Employee } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
 import { AddEmployeeDialog } from "./components/add-employee-dialog"
+import { EditEmployeeDialog } from "./components/edit-employee-dialog";
 
 type EmployeeRow = Employee & { name: string };
 
-export default async function EmployeesPage() {
+export default function EmployeesPage() {
   const data: EmployeeRow[] = getEmployees().map(e => ({
     ...e,
     name: `${e.firstName} ${e.lastName}`,
   }));
-
-  const columns = getColumns({
-    // We pass an empty onEdit for now, the DataTable will handle it.
-    onEdit: () => {},
-  })
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
   return (
     <div className="space-y-4">
@@ -29,7 +29,17 @@ export default async function EmployeesPage() {
             </Button>
         </AddEmployeeDialog>
        </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable 
+        data={data} 
+        onEdit={(employee) => setEditingEmployee(employee)} 
+      />
+      {editingEmployee && (
+        <EditEmployeeDialog
+          employee={editingEmployee}
+          isOpen={!!editingEmployee}
+          onClose={() => setEditingEmployee(null)}
+        />
+      )}
     </div>
   )
 }
