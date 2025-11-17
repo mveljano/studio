@@ -25,13 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { addPpeCheckout } from "@/lib/data";
@@ -98,124 +91,116 @@ export function AddPpeCheckoutForm({ employees, ppeEquipment, ppeStock }: AddPpe
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add PPE Checkout</CardTitle>
-        <CardDescription>Record a new equipment checkout for an employee.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="employeeId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Employee</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an employee" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {employees
-                          .filter(e => e.status === 'Active')
-                          .map((employee) => (
-                          <SelectItem key={employee.id} value={employee.id}>
-                            {employee.firstName} {employee.lastName}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="equipmentId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Equipment</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select equipment" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ppeEquipment.map((item) => (
-                          <SelectItem key={item.id} value={item.id} disabled={item.stock <= 0}>
-                            {item.name} ({item.stock} in stock)
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                     {currentStock !== undefined && currentStock <= 0 && (
-                        <FormDescription className="text-destructive">
-                            This item is out of stock.
-                        </FormDescription>
-                     )}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="size"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Size (optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., M, L, 10, 42" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="isPremature"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel>Premature Replacement</FormLabel>
-                      <FormDescription>
-                        Is this replacing lost or damaged equipment before its renewal date?
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-             <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes (optional)</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Reason for premature replacement, etc..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            <Button type="submit" disabled={loading || (currentStock !== undefined && currentStock <= 0)}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Add Checkout
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="employeeId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Employee</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an employee" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {employees
+                      .filter(e => e.status === 'Active')
+                      .map((employee) => (
+                      <SelectItem key={employee.id} value={employee.id}>
+                        {employee.firstName} {employee.lastName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="equipmentId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Equipment</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select equipment" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {ppeEquipment.map((item) => (
+                      <SelectItem key={item.id} value={item.id} disabled={item.stock <= 0}>
+                        {item.name} ({item.stock} in stock)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                 {currentStock !== undefined && currentStock <= 0 && (
+                    <FormDescription className="text-destructive">
+                        This item is out of stock.
+                    </FormDescription>
+                 )}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="size"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Size (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., M, L, 10, 42" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="isPremature"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel>Premature Replacement</FormLabel>
+                  <FormDescription>
+                    Is this replacing lost or damaged equipment before its renewal date?
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+         <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notes (optional)</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Reason for premature replacement, etc..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        <Button type="submit" disabled={loading || (currentStock !== undefined && currentStock <= 0)}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Add Checkout
+        </Button>
+      </form>
+    </Form>
   );
 }

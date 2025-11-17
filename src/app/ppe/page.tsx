@@ -3,7 +3,8 @@ import { getEmployees, getPpeCheckouts, getPpeEquipment } from "@/lib/data";
 import { columns } from "./components/checkout-columns";
 import { CheckoutDataTable } from "./components/checkout-data-table";
 import { AddPpeCheckoutForm } from "./components/add-ppe-checkout-form";
-import { StockLevels } from "./inventory/components/stock-levels";
+import { StockManagementDialog } from "./components/stock-management-dialog";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 export default async function PpePage() {
   const checkouts = getPpeCheckouts();
@@ -29,8 +30,19 @@ export default async function PpePage() {
 
   return (
     <div className="space-y-6">
-      <StockLevels equipment={equipment} />
-      <AddPpeCheckoutForm employees={employees} ppeEquipment={equipment} ppeStock={stock} />
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>PPE Management</CardTitle>
+            <CardDescription>Assign equipment to employees and manage your inventory.</CardDescription>
+          </div>
+          <StockManagementDialog equipment={equipment} />
+        </CardHeader>
+        <CardContent>
+          <AddPpeCheckoutForm employees={employees} ppeEquipment={equipment} ppeStock={stock} />
+        </CardContent>
+      </Card>
+      
       <CheckoutDataTable columns={columns} data={checkoutData} />
     </div>
   );

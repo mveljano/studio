@@ -20,9 +20,10 @@ import { PPEEquipment } from "@/lib/types";
 
 type StockLevelsProps = {
   equipment: PPEEquipment[];
+  className?: string;
 };
 
-export function StockLevels({ equipment }: StockLevelsProps) {
+export function StockLevels({ equipment, className }: StockLevelsProps) {
   const getMaxStock = () => {
     if (equipment.length === 0) return 100;
     return Math.max(...equipment.map(e => e.stock), 100);
@@ -30,11 +31,11 @@ export function StockLevels({ equipment }: StockLevelsProps) {
   const maxStock = getMaxStock();
   
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Current Stock Levels</CardTitle>
         <CardDescription>
-          An overview of the current quantity on hand for each PPE item.
+          An overview of the quantity on hand for each PPE item.
         </CardDescription>
       </CardHeader>
       <CardContent>

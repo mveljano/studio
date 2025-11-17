@@ -34,6 +34,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import type { PPEEquipment } from "@/lib/types";
 import { addPpeInboundDelivery } from "../../actions";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   equipmentId: z.string().min(1, { message: "Equipment is required." }),
@@ -43,9 +45,11 @@ const formSchema = z.object({
 
 type AddPpeDeliveryFormProps = {
     equipment: PPEEquipment[];
+    className?: string;
 }
 
-export function AddPpeDeliveryForm({ equipment }: AddPpeDeliveryFormProps) {
+export function AddPpeDeliveryForm({ equipment, className }: AddPpeDeliveryFormProps) {
+  const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -68,6 +72,7 @@ export function AddPpeDeliveryForm({ equipment }: AddPpeDeliveryFormProps) {
             description: "Inbound delivery has been recorded.",
         });
         form.reset();
+        router.refresh();
     } else {
         toast({
             variant: "destructive",
@@ -79,7 +84,7 @@ export function AddPpeDeliveryForm({ equipment }: AddPpeDeliveryFormProps) {
   }
 
   return (
-    <Card>
+    <Card className={cn(className)}>
       <CardHeader>
         <CardTitle>Add Inbound Stock</CardTitle>
         <CardDescription>Record a new delivery of PPE equipment.</CardDescription>
