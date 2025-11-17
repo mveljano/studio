@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getEmployee, getTrainingsForEmployee, getIncidentsForEmployee } from "@/lib/data";
 import {
   Card,
@@ -32,6 +33,7 @@ import {
   Contact,
   Calendar,
   CalendarX,
+  Printer,
 } from "lucide-react";
 import { TrainingModule } from "@/lib/types";
 import { differenceInDays, parseISO } from "date-fns";
@@ -147,7 +149,7 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
               <TableHeader>
                 <TableRow>
                   <TableHead>Training</TableHead>
-                  <TableHead>Due Date</TableHead>
+                  <TableHead>Date</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -156,26 +158,36 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
                 {trainings.map((training) => {
                   const isActionable = training.status === "Overdue" || training.status === "In Progress";
                   const daysDelayed = training.status === "Overdue" ? differenceInDays(today, parseISO(training.dueDate)) : 0;
+                  const dateToShow = training.status === 'Completed' ? training.completionDate : training.dueDate;
 
                   return (
                     <TableRow key={training.id}>
                       <TableCell className="font-medium">{training.name}</TableCell>
-                      <TableCell>{training.dueDate}</TableCell>
+                      <TableCell>{dateToShow}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           {getStatusIcon(training.status)}
                           <span>{training.status}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
-                        {isActionable ? (
+                      <TableCell className="text-right space-x-2">
+                        {training.status === 'Completed' && (
+                           <Button asChild variant="outline" size="sm">
+                             <Link href={`/documents/training-record/${employee.id}/${training.id}`} target="_blank">
+                               <Printer className="mr-2 h-4 w-4" />
+                               Print Record
+                             </Link>
+                           </Button>
+                        )}
+                        {isActionable && (
                           <RemediationDialog 
                             employeeName={fullName}
                             trainingName={training.name}
                             daysDelayed={daysDelayed}
                             completionStatus={training.status}
                           />
-                        ) : (
+                        )}
+                         {training.status === 'Not Started' && (
                            <Button variant="ghost" size="sm">View</Button>
                         )}
                       </TableCell>
