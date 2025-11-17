@@ -47,23 +47,23 @@ export default function OrganizationPage() {
       <CardContent>
         {open && <Accordion type="single" collapsible className="w-full">
           {departments.map((department) => (
-            <AccordionItem value={department.name} key={department.name}>
-              <AccordionTrigger>
-                <div className="flex flex-1 items-center justify-between pr-4">
+            <AccordionItem value={department.name} key={department.name} className="group/trigger">
+              <div className="flex items-center w-full">
+                <AccordionTrigger className="flex-1">
                   <div className="flex items-center gap-3">
                     <Building2 className="h-5 w-5 text-primary" />
                     <span className="font-semibold text-lg">{department.name}</span>
                   </div>
-                  <div className="flex items-center gap-2 opacity-0 group-hover/trigger:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                </AccordionTrigger>
+                <div className="flex items-center gap-2 pr-4 opacity-0 group-hover/trigger:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
                     <ManageDepartmentDialog department={department} onUpdate={onDepartmentUpdate}>
                       <Button variant="ghost" size="sm">Edit</Button>
                     </ManageDepartmentDialog>
-                     <ManagePositionDialog department={department} onUpdate={onDepartmentUpdate}>
-                       <Button variant="ghost" size="sm">Add Position</Button>
+                      <ManagePositionDialog department={department} onUpdate={onDepartmentUpdate}>
+                        <Button variant="ghost" size="sm">Add Position</Button>
                     </ManagePositionDialog>
                   </div>
-                </div>
-              </AccordionTrigger>
+              </div>
               <AccordionContent>
                 <ul className="space-y-3 pt-2 pl-8">
                   {department.positions.length > 0 ? department.positions.map((position) => (
