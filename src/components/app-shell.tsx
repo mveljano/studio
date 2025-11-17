@@ -32,6 +32,7 @@ import {
   Settings,
   User,
   Shield,
+  Building,
 } from "lucide-react";
 import { Logo } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -54,6 +55,11 @@ const navItems = [
     href: "/ppe",
     icon: Shield,
     label: "PPE",
+  },
+  {
+    href: "/organization",
+    icon: Building,
+    label: "Organization",
   },
 ];
 

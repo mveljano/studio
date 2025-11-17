@@ -47,3 +47,8 @@ export type PPECheckout = {
   size?: string;
   notes?: string;
 };
+
+export type Department = {
+    name: string;
+    positions: string[];
+};

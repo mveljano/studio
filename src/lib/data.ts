@@ -1,8 +1,39 @@
 
-import type { Employee, SafetyIncident, TrainingModule, PPECheckout } from '@/lib/types';
+import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department } from '@/lib/types';
 import { subDays, addDays, format } from 'date-fns';
 
 const today = new Date();
+
+export const departments: Department[] = [
+    {
+        name: 'Production',
+        positions: ['Assembly Line Worker', 'Paint Shop Operator', 'Production Supervisor', 'Welder']
+    },
+    {
+        name: 'Quality Assurance',
+        positions: ['Quality Control Inspector', 'Quality Engineer', 'QA Manager']
+    },
+    {
+        name: 'Maintenance',
+        positions: ['Maintenance Technician', 'Maintenance Supervisor']
+    },
+    {
+        name: 'Safety',
+        positions: ['EHS Manager', 'Safety Coordinator']
+    },
+    {
+        name: 'Engineering',
+        positions: ['Robotics Engineer', 'Mechanical Engineer', 'Electrical Engineer']
+    },
+    {
+        name: 'Supply Chain',
+        positions: ['Logistics Coordinator', 'Warehouse Associate']
+    },
+    {
+        name: 'Human Resources',
+        positions: ['HR Business Partner', 'HR Generalist', 'Recruiter']
+    }
+];
 
 export const employees: Employee[] = [
   { id: '1', employeeId: 'E1001', firstName: 'John', lastName: 'Doe', gender: 'Male', dateOfBirth: '1985-05-15', socialSecurityNumber: '123-456-7890', residence: '123 Main St', municipality: 'Anytown', profession: 'Mechanic', employmentDate: '2015-03-01', position: 'Assembly Line Worker', department: 'Production', email: 'john.doe@example.com', certifications: ['Forklift Operation', 'Hazardous Materials Handling'], status: 'Active' },
