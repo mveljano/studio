@@ -110,12 +110,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                                 <SidebarMenuSub>
                                     {item.children.map((child) => (
                                         <SidebarMenuSubItem key={child.href}>
-                                            <Link href={child.href}>
-                                                 <SidebarMenuSubButton isActive={pathname === child.href}>
+                                            <SidebarMenuSubButton asChild isActive={pathname === child.href}>
+                                                <Link href={child.href}>
                                                     <child.icon className="h-4 w-4" />
                                                     <span>{child.label}</span>
-                                                 </SidebarMenuSubButton>
-                                            </Link>
+                                                </Link>
+                                            </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
                                     ))}
                                 </SidebarMenuSub>
