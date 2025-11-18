@@ -33,6 +33,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Apply these headers to all routes in your application.
+        source: '/:path*',
+        headers: [
+            {
+                key: 'X-Content-Type-Options',
+                value: 'nosniff',
+            }
+        ],
+      },
+      {
         source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|js|css)',
         headers: [
           {
