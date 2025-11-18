@@ -227,7 +227,7 @@ export function ManagePpeEquipment({ equipment }: ManagePpeEquipmentProps) {
         <DialogHeader>
             <DialogTitle>Edit Equipment Name</DialogTitle>
             <DialogDescription>
-                Rename the equipment item from "{editingItem?.name}".
+                Update the name and renewal period for "{editingItem?.name}".
             </DialogDescription>
         </DialogHeader>
         <Form {...form}>
