@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -233,7 +234,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
                     <div>Risk</div>
                     <div className="border-l pl-4">Preventative Measure</div>
                 </div>
-                {risks.map((rm, index) => (
+                {(risks || []).map((rm, index) => (
                     <div key={rm.id} className={`grid grid-cols-2 gap-x-4 p-1 items-center ${index < risks.length - 1 ? 'border-b' : ''}`}>
                         <Input
                             value={rm.risk}
@@ -492,5 +493,3 @@ export default function OrganizationPage() {
     </Card>
   );
 }
-
-    

@@ -1,3 +1,4 @@
+
 import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department, Position, RiskAndMeasure, PPEEquipment, PPEInboundDelivery } from '@/lib/types';
 import { subDays, addDays, format, subMonths } from 'date-fns';
 
@@ -239,7 +240,8 @@ export let departments: Department[] = [
                 name: 'Logistics Coordinator', 
                 medicalExamFrequency: 5, 
                 fireProtectionExamFrequency: 3, 
-                description: 'Coordinates logistics.', _risksAndMeasures: [], 
+                description: 'Coordinates logistics.', 
+                risksAndMeasures: [], 
                 riskLevel: 'Low', 
                 specialConditions: '',
                 subPositions: [
