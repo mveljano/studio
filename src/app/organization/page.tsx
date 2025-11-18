@@ -233,7 +233,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
                     <div>Risk</div>
                     <div className="border-l pl-4">Preventative Measure</div>
                 </div>
-                {risks.map((rm, index) => (
+                {(risks || []).map((rm, index) => (
                     <div key={rm.id} className={`grid grid-cols-2 gap-x-4 p-1 items-center ${index < risks.length - 1 ? 'border-b' : ''}`}>
                         <Input
                             value={rm.risk}
@@ -256,7 +256,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
                         </div>
                     </div>
                 ))}
-                 {risks.length === 0 && <p className="p-2 text-muted-foreground">No specific risks defined.</p>}
+                 {(!risks || risks.length === 0) && <p className="p-2 text-muted-foreground">No specific risks defined.</p>}
                  <div className="p-1">
                     <Button type="button" variant="ghost" size="sm" onClick={handleAddRisk} className="w-full">
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Risk
@@ -413,19 +413,22 @@ function PositionItem({ department, position, onUpdate }: { department: Departme
                     </div>
                 </div>
                 <AccordionContent>
-                    {!hasSubPositions ? (
+                    <div className="space-y-4">
                         <PositionDetails department={department} position={position} onUpdate={onUpdate} />
-                    ) : (
-                         <div className="mt-4 pl-4 border-l-2 border-dashed">
-                            <h4 className="font-semibold mb-2 text-xs uppercase text-muted-foreground ml-4">Sub-positions</h4>
-                            {position.subPositions!.map(subPos => (
-                                <PositionItem key={subPos.id} department={department} position={subPos} onUpdate={onUpdate} />
-                            ))}
-                            <div className="pl-8">
-                                <AddPosition departmentName={department.name} parentId={position.id} onUpdate={onUpdate} />
+                        
+                        {hasSubPositions && (
+                            <div className="mt-4 pl-4 border-l-2 border-dashed">
+                                <h4 className="font-semibold mb-2 text-xs uppercase text-muted-foreground ml-4">Sub-positions</h4>
+                                {position.subPositions!.map(subPos => (
+                                    <PositionItem key={subPos.id} department={department} position={subPos} onUpdate={onUpdate} />
+                                ))}
                             </div>
+                        )}
+
+                        <div className="pl-8">
+                           <AddPosition departmentName={department.name} parentId={position.id} onUpdate={onUpdate} />
                         </div>
-                    )}
+                    </div>
                 </AccordionContent>
             </AccordionItem>
         </Accordion>
