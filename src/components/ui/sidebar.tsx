@@ -208,11 +208,11 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-             <SheetHeader className="p-4">
-               <SheetTitle asChild>
-                 <VisuallyHidden.Root>Main Menu</VisuallyHidden.Root>
-                </SheetTitle>
-             </SheetHeader>
+            <SheetHeader className="p-4">
+              <SheetTitle asChild>
+                <VisuallyHidden.Root>Main Menu</VisuallyHidden.Root>
+              </SheetTitle>
+            </SheetHeader>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -768,5 +768,3 @@ export {
   SidebarTrigger,
   useSidebar,
 }
-
-    
