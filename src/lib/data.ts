@@ -1,3 +1,4 @@
+
 import type { Employee, SafetyIncident, TrainingModule, PPECheckout, Department, Position, RiskAndMeasure, PPEEquipment, PPEInboundDelivery } from '@/lib/types';
 import { subDays, addDays, format, subMonths } from 'date-fns';
 
@@ -247,7 +248,8 @@ export let departments: Department[] = [
                     { 
                         id: 'sc-ware', 
                         name: 'Warehouse Associate',
-                        medicalExamFrequency: 4, fireProtectionExamFrequency: 2, 
+                        medicalExamFrequency: 4, 
+                        fireProtectionExamFrequency: 2, 
                         description: 'Works in the warehouse.', 
                         risksAndMeasures: [{id: 'rm13', risk: 'Falling objects', measure: 'Hard hat usage'}], 
                         riskLevel: 'Medium', 
@@ -626,3 +628,5 @@ export function getAllPositions(departmentName: string): { id: string, name: str
     traverse(department.positions, 0);
     return positionsList;
   }
+
+    

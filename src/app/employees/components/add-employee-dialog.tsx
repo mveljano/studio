@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -33,7 +34,7 @@ import {
   } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { departments } from "@/lib/data";
+import { departments, getAllPositions } from "@/lib/data";
 import { addEmployeeAction } from "../actions";
 
 const formSchema = z.object({
@@ -83,6 +84,8 @@ export function AddEmployeeDialog({ children }: AddEmployeeDialogProps) {
   });
 
   const selectedDepartment = form.watch("department");
+  const availablePositions = selectedDepartment ? getAllPositions(selectedDepartment) : [];
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
@@ -269,7 +272,7 @@ export function AddEmployeeDialog({ children }: AddEmployeeDialogProps) {
                         <SelectTrigger><SelectValue placeholder="Select a position" /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            {departments.find(d => d.name === selectedDepartment)?.positions.map(p => <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>)}
+                            {availablePositions.map(p => <SelectItem key={p.id} value={p.name} style={{ paddingLeft: `${p.level * 1.5}rem` }}>{p.name}</SelectItem>)}
                         </SelectContent>
                     </Select>
                     <FormMessage />
@@ -323,3 +326,5 @@ export function AddEmployeeDialog({ children }: AddEmployeeDialogProps) {
     </Dialog>
   );
 }
+
+    
