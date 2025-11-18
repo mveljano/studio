@@ -188,7 +188,7 @@ function InlineFrequencyInput({ departmentName, positionId, field, initialValue,
 
 function RisksAndMeasuresManager({ department, position, onUpdate }: { department: Department, position: Position, onUpdate: () => void }) {
     const { toast } = useToast();
-    const [risks, setRisks] = useState(position.risksAndMeasures);
+    const [risks, setRisks] = useState(position.risksAndMeasures || []);
 
     const handleUpdate = (index: number, field: 'risk' | 'measure', value: string) => {
         const newRisks = [...risks];
@@ -203,7 +203,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
                 onUpdate();
             } else {
                 toast({ variant: "destructive", title: "Error", description: result.error });
-                setRisks(position.risksAndMeasures); // Revert
+                setRisks(position.risksAndMeasures || []); // Revert
             }
         });
     }, 1500);
@@ -222,7 +222,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
     };
 
     useEffect(() => {
-       setRisks(position.risksAndMeasures);
+       setRisks(position.risksAndMeasures || []);
     }, [position.risksAndMeasures]);
 
     return (
@@ -492,3 +492,5 @@ export default function OrganizationPage() {
     </Card>
   );
 }
+
+    
