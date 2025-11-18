@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -26,7 +27,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Employee } from "@/lib/types"
-import { getColumns, EmployeeColumnActions } from "./columns"
+import { getColumns } from "./columns"
 
 interface DataTableProps<TData extends { id: string }, TValue> {
   data: TData[]
