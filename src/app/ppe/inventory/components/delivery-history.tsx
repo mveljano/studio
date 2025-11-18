@@ -59,7 +59,7 @@ export function DeliveryHistory({ deliveries, equipment }: DeliveryHistoryProps)
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
+                      <Button variant="ghost" className="h-8 w-8 p-0" aria-label={`Actions for delivery on ${delivery.deliveryDate}`}>
                         <span className="sr-only">Open menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>

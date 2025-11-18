@@ -124,8 +124,8 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
                       <span>{cert}</span>
                     </div>
                      <div className="opacity-0 group-hover:opacity-100 space-x-1">
-                        <Button variant="ghost" size="icon" className="h-6 w-6"><FileText className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive"><XCircle className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6" aria-label={`View certification for ${cert}`}><FileText className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" aria-label={`Remove certification for ${cert}`}><XCircle className="h-4 w-4" /></Button>
                     </div>
                   </li>
                 ))}
@@ -207,8 +207,8 @@ export default function EmployeeDetailPage({ params }: { params: { id: string } 
                     <p className="text-sm text-muted-foreground">{incident.description}</p>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 space-x-1">
-                    <Button variant="ghost" size="icon" className="h-6 w-6"><FileText className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive"><XCircle className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-6 w-6" aria-label={`View details for incident on ${incident.date}`}><FileText className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" aria-label={`Remove incident on ${incident.date}`}><XCircle className="h-4 w-4" /></Button>
                   </div>
                 </li>
               ))}

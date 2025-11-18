@@ -250,7 +250,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
                                 className="h-8 border-0 shadow-none focus-visible:ring-1 flex-grow"
                                 onClick={(e) => e.stopPropagation()}
                             />
-                             <Button type="button" variant="ghost" size="icon" className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive" onClick={() => handleRemoveRisk(index)}>
+                             <Button type="button" variant="ghost" size="icon" className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive" onClick={() => handleRemoveRisk(index)} aria-label="Remove risk">
                                 <X className="h-4 w-4" />
                             </Button>
                         </div>
@@ -391,7 +391,7 @@ function PositionItem({ department, position, onUpdate }: { department: Departme
                     <div className="flex items-center gap-1 pr-4 opacity-0 group-hover/position:opacity-100 transition-opacity">
                          <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={(e) => e.stopPropagation()}>
+                                <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={(e) => e.stopPropagation()} aria-label={`Delete position ${position.name}`}>
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </AlertDialogTrigger>
