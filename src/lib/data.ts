@@ -239,13 +239,14 @@ export let departments: Department[] = [
                 name: 'Logistics Coordinator', 
                 medicalExamFrequency: 5, 
                 fireProtectionExamFrequency: 3, 
-                description: 'Coordinates logistics.', _risksAndMeasures: [], 
+                description: 'Coordinates logistics.', 
+                risksAndMeasures: [], 
                 riskLevel: 'Low', 
                 specialConditions: '',
                 subPositions: [
                     { 
                         id: 'sc-ware', 
-                        name: 'Warehouse Associate', 
+                        name: 'Warehouse Associate',
                         medicalExamFrequency: 4, fireProtectionExamFrequency: 2, 
                         description: 'Works in the warehouse.', 
                         risksAndMeasures: [{id: 'rm13', risk: 'Falling objects', measure: 'Hard hat usage'}], 
