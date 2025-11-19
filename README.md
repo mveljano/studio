@@ -1,4 +1,4 @@
-# Firebase Studio
+# AutoGuard EHS
 
 This is a NextJS starter in Firebase Studio.
 
