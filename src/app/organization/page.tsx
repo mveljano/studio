@@ -326,6 +326,11 @@ function AddPosition({ departmentName, parentId, onUpdate }: { departmentName: s
 }
 
 function PositionDetails({ department, position, onUpdate }: { department: Department, position: Position, onUpdate: () => void }) {
+    // A "container" position might not have these details.
+    if (position.riskLevel === undefined) {
+        return null;
+    }
+    
     return (
         <div className="pl-4 border-l-2 border-muted ml-4 space-y-4 text-sm" onClick={e => e.stopPropagation()}>
             <div className="space-y-1">
@@ -415,13 +420,19 @@ function PositionItem({ department, position, onUpdate }: { department: Departme
                 </div>
                 <AccordionContent>
                     <PositionDetails department={department} position={position} onUpdate={onUpdate} />
-                    <div className="mt-4 pl-4 border-l-2 border-dashed">
-                        <h4 className="font-semibold mb-2 text-xs uppercase text-muted-foreground ml-4">Sub-positions</h4>
-                        {hasSubPositions && position.subPositions!.map(subPos => (
-                            <PositionItem key={subPos.id} department={department} position={subPos} onUpdate={onUpdate} />
-                        ))}
+
+                    {hasSubPositions && (
+                        <div className="mt-4 pl-4 border-l-2 border-dashed">
+                            <h4 className="font-semibold mb-2 text-xs uppercase text-muted-foreground ml-4">Sub-positions</h4>
+                            {position.subPositions!.map(subPos => (
+                                <PositionItem key={subPos.id} department={department} position={subPos} onUpdate={onUpdate} />
+                            ))}
+                        </div>
+                    )}
+                    
+                    <div className={cn("pl-4", hasSubPositions && "border-l-2 border-dashed")}>
                         <div className="pl-8">
-                            <AddPosition departmentName={department.name} parentId={position.id} onUpdate={onUpdate} />
+                           <AddPosition departmentName={department.name} parentId={position.id} onUpdate={onUpdate} />
                         </div>
                     </div>
                 </AccordionContent>

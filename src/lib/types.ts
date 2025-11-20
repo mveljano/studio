@@ -75,11 +75,11 @@ export type Position = {
     id: string;
     name: string;
     description: string;
-    medicalExamFrequency: number;
-    fireProtectionExamFrequency: number;
-    riskLevel: 'Low' | 'Medium' | 'High';
-    specialConditions: string;
-    risksAndMeasures: RiskAndMeasure[];
+    medicalExamFrequency?: number;
+    fireProtectionExamFrequency?: number;
+    riskLevel?: 'Low' | 'Medium' | 'High';
+    specialConditions?: string;
+    risksAndMeasures?: RiskAndMeasure[];
     subPositions?: Position[];
 };
 

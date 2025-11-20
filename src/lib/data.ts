@@ -238,12 +238,7 @@ export let departments: Department[] = [
             { 
                 id: 'sc-log', 
                 name: 'Logistics Coordinator', 
-                medicalExamFrequency: 5, 
-                fireProtectionExamFrequency: 3, 
                 description: 'Coordinates logistics.', 
-                risksAndMeasures: [], 
-                riskLevel: 'Low', 
-                specialConditions: '',
                 subPositions: [
                     { 
                         id: 'sc-ware', 
@@ -527,8 +522,6 @@ export function addPosition(departmentName: string, positionData: Omit<Position,
     const newPosition: Position = {
         ...positionData,
         id: `pos-${Date.now()}-${Math.random()}`,
-        risksAndMeasures: positionData.risksAndMeasures || [],
-        subPositions: []
     };
 
     if (parentId) {
