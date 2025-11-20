@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -33,7 +34,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Employee } from "@/lib/types";
-import { departments } from "@/lib/data";
+import { departments, getAllPositions } from "@/lib/data";
 import { updateEmployeeAction } from "../[id]/actions";
 
 const formSchema = z.object({
@@ -81,6 +82,7 @@ export function EditEmployeeDialog({ employee, isOpen, onClose }: EditEmployeeDi
   }, [employee, form]);
 
   const selectedDepartment = form.watch("department");
+  const availablePositions = selectedDepartment ? getAllPositions(selectedDepartment) : [];
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
@@ -258,7 +260,7 @@ export function EditEmployeeDialog({ employee, isOpen, onClose }: EditEmployeeDi
                         <SelectTrigger><SelectValue placeholder="Select a position" /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            {departments.find(d => d.name === selectedDepartment)?.positions.map(p => <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>)}
+                             {availablePositions.map(p => <SelectItem key={p.id} value={p.name} style={{ paddingLeft: `${p.level * 1.5}rem` }}>{p.name}</SelectItem>)}
                         </SelectContent>
                     </Select>
                     <FormMessage />
@@ -323,3 +325,5 @@ export function EditEmployeeDialog({ employee, isOpen, onClose }: EditEmployeeDi
     </Dialog>
   );
 }
+
+    

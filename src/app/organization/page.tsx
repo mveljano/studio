@@ -257,7 +257,7 @@ function RisksAndMeasuresManager({ department, position, onUpdate }: { departmen
                         </div>
                     </div>
                 ))}
-                 {risks.length === 0 && <p className="p-2 text-muted-foreground">No specific risks defined.</p>}
+                 {(!risks || risks.length === 0) && <p className="p-2 text-muted-foreground">No specific risks defined.</p>}
                  <div className="p-1">
                     <Button type="button" variant="ghost" size="sm" onClick={handleAddRisk} className="w-full">
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Risk
@@ -420,17 +420,11 @@ function PositionItem({ department, position, onUpdate }: { department: Departme
                 </div>
                 <AccordionContent>
                     <PositionDetails department={department} position={position} onUpdate={onUpdate} />
-
-                    {hasSubPositions && (
-                        <div className="mt-4 pl-4 border-l-2 border-dashed">
-                            <h4 className="font-semibold mb-2 text-xs uppercase text-muted-foreground ml-4">Sub-positions</h4>
-                            {position.subPositions!.map(subPos => (
-                                <PositionItem key={subPos.id} department={department} position={subPos} onUpdate={onUpdate} />
-                            ))}
-                        </div>
-                    )}
-                    
-                    <div className={cn("pl-4", hasSubPositions && "border-l-2 border-dashed")}>
+                    <div className="mt-4 pl-4 border-l-2 border-dashed">
+                        <h4 className="font-semibold mb-2 text-xs uppercase text-muted-foreground ml-4">Sub-positions</h4>
+                        {hasSubPositions && position.subPositions!.map(subPos => (
+                            <PositionItem key={subPos.id} department={department} position={subPos} onUpdate={onUpdate} />
+                        ))}
                         <div className="pl-8">
                            <AddPosition departmentName={department.name} parentId={position.id} onUpdate={onUpdate} />
                         </div>
